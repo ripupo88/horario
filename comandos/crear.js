@@ -6,13 +6,34 @@ let f_procesa_crear = (message) => {
         .then(creador_mensaje => {
 
             if (creador_mensaje[0] != undefined) {
-
                 if (creador_mensaje[0].role == "ADMIN_ROLE") {
 
-                    enviar.f_manda_mensaje(message.chat.id, 'Itroduzca nombre y apellidos');
+                    let mensaje_separado = new Array;
+                    mensaje_separado = message.text.split(",");
+
+                    let nombre = mensaje_separado[0].replace(/\/crear /g, "").trim();
+                    let nif = mensaje_separado[1].trim();
+                    let alias = mensaje_separado[2].trim();
+                    let telegram_id = message.reply_to_message.from.id;
+
+                    let nuevo_usuario = {
+                        nombre,
+                        nif,
+                        alias,
+                        telegram_id
+                    }
+
+                    mongo.f_nuevo_usuario(nuevo_usuario)
+                        .then(usuario => {
+                            console.log(usuario);
+                            enviar.f_manda_mensaje(message.chat.id, `El usuario ${usuario.alias} ha sido creado`);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            enviar.f_manda_mensaje(message.chat.id, 'El usuario no se ha creado, ha ocurrido un error');
+                        });
 
                 } else {
-
                     enviar.f_manda_mensaje(message.chat.id, 'No tiene privilegios para realizar esta operación');
                 }
             } else {
@@ -21,6 +42,7 @@ let f_procesa_crear = (message) => {
         })
         .catch(err => {
             console.log(err);
+            enviar.f_manda_mensaje(message.chat.id, 'Ha ocurrido un error');
         });
 }
 
@@ -29,4 +51,4 @@ let f_nombre = (nombre) => {
     console.log("creando", nombre);
 }
 
-module.exports = { f_procesa_crear, f_nombre, creando };
+module.exports = { f_procesa_crear, f_nombre };

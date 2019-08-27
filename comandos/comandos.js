@@ -1,13 +1,27 @@
 const crear = require('./crear');
 
 let f_procesa_comando = (message) => {
-    if (message.text == "/crear") {
-        crear.f_procesa_crear(message)
-    } else if (crear.creando) {
-        crear.f_nombre(message.text);
-    } else {
-        console.log(crear.creando);
-    }
-}
 
+    let re = /^\/[a-z]*/ig;
+    let result = re.exec(message.text);
+
+    switch (result[0]) {
+
+        case "/crear":
+            crear.f_procesa_crear(message);
+            break;
+
+        case "/recarga":
+            ///////////////////
+            break;
+
+        default:
+
+            break;
+
+
+
+    }
+
+}
 module.exports = { f_procesa_comando }

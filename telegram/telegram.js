@@ -14,5 +14,6 @@ var api = new telegram({
 
 api.on('message', function(message) {
     // Received text message
+    //console.log(message);
     comandos.f_procesa_comando(message);
 });
