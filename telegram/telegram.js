@@ -1,10 +1,14 @@
 const telegram = require('telegram-bot-api');
 const comandos = require('../comandos/comandos');
+const telegram_config = require('../privado/telegram.config');
+const crear = require('../comandos/crear');
 
 var api = new telegram({
-    token: '915983007:AAF9M2Xja48XvzAjjqORHd7MRLhxak5NLUA',
+    token: telegram_config.telegram_config.token,
     updates: {
-        enabled: true
+        enabled: true,
+        get_interval: 3000,
+        pooling_timeout: 2000
     }
 });
 

@@ -6,6 +6,11 @@ const usuario_schema = new mongoose.Schema({
     nombre: String,
     nif: String,
     alias: String,
+    role: {
+        type: String,
+        enum: ["ADMIN_ROLE", "USER_ROLE"],
+        default: "USER_ROLE"
+    },
     correo: String,
     telegram_id: Number,
     activo: {
