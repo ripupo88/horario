@@ -24,8 +24,8 @@ let f_procesa_crear = (message) => {
                         alias,
                         telegram_id
                     }
-                    console.log('a confirmar va');
-                    confirmar.f_confirmacion(message.chat.id, 'Confirmas la creacion de usuario?')
+
+                    confirmar.f_confirmacion(message, 'Confirmas la creacion de usuario?')
                         .then(data => {
                             console.log(data);
                             mongo.f_nuevo_usuario(nuevo_usuario)

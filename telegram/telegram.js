@@ -1,5 +1,4 @@
 const telegram = require('telegram-bot-api');
-const comandos = require('../comandos/comandos');
 const telegram_config = require('../privado/telegram.config');
 const events = require('events');
 
@@ -16,18 +15,21 @@ let api = new telegram({
 });
 
 api.on('message', function(message) {
-    // Received text message
-    //console.log(message);
-    comandos.f_procesa_comando(message);
+
+    eventEmitter.emit('message', message);
+
 });
 
 api.on('inline.callback.query', function(message) {
+
     api.answerCallbackQuery({
         callback_query_id: message.id,
         text: message.data
     }, (err, res) => {
         if (err) console.log('error', err);
-        console.log('res', res, message);
         eventEmitter.emit('respuesta', message);
+
     })
 });
+
+module.exports = { eventEmitter };
