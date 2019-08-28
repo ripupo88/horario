@@ -1,5 +1,7 @@
 const mongo = require('../mongo/mongodb');
 const enviar = require('../telegram/enviar');
+const confirmar = require('../telegram/confirmacion');
+
 
 let f_procesa_crear = (message) => {
     mongo.f_confirma_telegram_id(message.from.id)
@@ -22,16 +24,25 @@ let f_procesa_crear = (message) => {
                         alias,
                         telegram_id
                     }
-
-                    mongo.f_nuevo_usuario(nuevo_usuario)
-                        .then(usuario => {
-                            console.log(usuario);
-                            enviar.f_manda_mensaje(message.chat.id, `El usuario ${usuario.alias} ha sido creado`);
+                    console.log('a confirmar va');
+                    confirmar.f_confirmacion(message.chat.id, 'Confirmas la creacion de usuario?')
+                        .then(data => {
+                            console.log(data);
+                            mongo.f_nuevo_usuario(nuevo_usuario)
+                                .then(usuario => {
+                                    console.log(usuario);
+                                    enviar.f_manda_mensaje(message.chat.id, `El usuario ${usuario.alias} ha sido creado`);
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    enviar.f_manda_mensaje(message.chat.id, 'El usuario no se ha creado, ha ocurrido un error');
+                                });
                         })
                         .catch(err => {
                             console.log(err);
                             enviar.f_manda_mensaje(message.chat.id, 'El usuario no se ha creado, ha ocurrido un error');
-                        });
+                        })
+
 
                 } else {
                     enviar.f_manda_mensaje(message.chat.id, 'No tiene privilegios para realizar esta operación');

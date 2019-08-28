@@ -12,7 +12,7 @@ const usuario_schema = new mongoose.Schema({
         default: "USER_ROLE"
     },
     correo: String,
-    telegram_id: Number,
+    telegram_id: { type: Number },
     activo: {
         type: Boolean,
         default: true

@@ -18,10 +18,6 @@ let f_procesa_comando = (message) => {
         default:
 
             break;
-
-
-
     }
-
 }
 module.exports = { f_procesa_comando }
