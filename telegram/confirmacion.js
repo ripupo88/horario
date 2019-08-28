@@ -6,14 +6,14 @@ var api = new telegram({
 });
 
 let KeyBoard = {
-    keyboard: [
+    inline_keyboard: [
         [{
                 text: 'Confirmar',
-                callback_data: '1-1'
+                callback_data: 'si'
             },
             {
                 text: 'Cancelar',
-                callback_data: '1-2'
+                callback_data: 'no'
             }
         ]
     ],
@@ -27,17 +27,14 @@ let f_confirmacion = (chat_id, text) => {
         api.sendMessage({
             chat_id,
             text,
-            reply_markup: JSON.stringify(KeyBoard),
-            one_time_keyboard: true
+            reply_markup: JSON.stringify(KeyBoard)
         });
 
-        api.on('message', function(message) {
-            console.log('mensaje deconfr', message);
-            if (message.text == 'Confirmar') {
-                resolve(message.text);
-            } else {
-                reject('Cancelar');
-            }
+        api.on('inline.callback.query', function(message) {
+            api.answerCallbackQuery({
+                callback_query_id: message.id,
+                text: 'confirmado'
+            })
         });
         setTimeout(() => {
             reject('tiempo')
