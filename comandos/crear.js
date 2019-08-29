@@ -10,8 +10,7 @@ let f_procesa_crear = (message) => {
             if (creador_mensaje[0] != undefined) {
                 if (creador_mensaje[0].role == "ADMIN_ROLE") {
 
-                    let mensaje_separado = new Array;
-                    mensaje_separado = message.text.split(",");
+                    let mensaje_separado = message.text.split(",");
 
                     let nombre = mensaje_separado[0].replace(/\/crear /g, "").trim();
                     let nif = mensaje_separado[1].trim();
@@ -24,9 +23,10 @@ let f_procesa_crear = (message) => {
                         alias,
                         telegram_id
                     }
-
-                    confirmar.f_confirmacion(message, 'Confirmas la creacion de usuario?')
+                    let texto_confirmacion = `¿confirmas la creacion de ${alias}\nnombre${nombre}\nNIF${nif}\n`;
+                    confirmar.f_confirmacion(message, texto_confirmacion)
                         .then(data => {
+
                             console.log(data);
                             mongo.f_nuevo_usuario(nuevo_usuario)
                                 .then(usuario => {
@@ -37,6 +37,7 @@ let f_procesa_crear = (message) => {
                                     console.log(err);
                                     enviar.f_manda_mensaje(message.chat.id, 'El usuario no se ha creado, ha ocurrido un error');
                                 });
+
                         })
                         .catch(err => {
                             console.log(err);

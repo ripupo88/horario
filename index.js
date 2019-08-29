@@ -8,5 +8,6 @@ telegram.eventEmitter.on('message', message => {
 });
 
 telegram.eventEmitter.on('respuesta', message => {
+    console.log('evento 2');
     confirm.escucha_eventos(message);
 });

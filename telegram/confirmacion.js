@@ -10,10 +10,18 @@ var api = new telegram({
 });
 
 let escucha_eventos = (message) => {
-
-
-    console.log(message.from.id);
-    console.log(message.message.reply_to_message.from.id);
+    console.log('evento 3');
+    var confirmacion;
+    if (message.from.id === message.message.reply_to_message.from.id) {
+        if (message.data === 'si') {
+            console.log('selected SI');
+            confirmacion = true;
+        } else {
+            console.log('selected NOOOO');
+            confirmacion = false;
+        }
+        eventEmitter.emit('respu', confirmacion);
+    }
 }
 
 let KeyBoard = {
@@ -34,18 +42,36 @@ let KeyBoard = {
 let f_confirmacion = (message, text) => {
 
     return new Promise((resolve, reject) => {
-
+        var mensaje_id;
         api.sendMessage({
             chat_id: message.chat.id,
             text,
             reply_to_message_id: message.message_id,
             reply_markup: JSON.stringify(KeyBoard)
+        }, (err, res) => {
+            if (err) console.log(err);
+            console.log(res.message_id);
+            console.log(res.message_id);
+            mensaje_id = res.message_id;
         });
 
-
+        eventEmitter.on('respu', confirmacion => {
+            if (confirmacion == true) {
+                api.deleteMessage({
+                    chat_id: message.chat.id,
+                    message_id: mensaje_id
+                })
+                return resolve('ha aceptado');
+            }
+            api.deleteMessage({
+                chat_id: message.chat.id,
+                message_id: mensaje_id
+            })
+            return reject('Has cancelado la operación');
+        })
 
         setTimeout(() => {
-            reject('tiempo')
+            reject('tiempo limite excedido')
         }, 20000);
     });
 }

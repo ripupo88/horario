@@ -27,9 +27,9 @@ api.on('inline.callback.query', function(message) {
         text: message.data
     }, (err, res) => {
         if (err) console.log('error', err);
-        eventEmitter.emit('respuesta', message);
-
-    })
+    });
+    console.log('evento 1');
+    eventEmitter.emit('respuesta', message);
 });
 
 module.exports = { eventEmitter };
