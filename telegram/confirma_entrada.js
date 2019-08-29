@@ -35,8 +35,7 @@ let KeyBoard = {
                 callback_data: 'no'
             }
         ]
-    ],
-    one_time_keyboard: true
+    ]
 };
 
 let f_confirmacion = (message, text) => {
@@ -55,35 +54,24 @@ let f_confirmacion = (message, text) => {
             mensaje_id = res.message_id;
         });
 
-        var terminado = false;
-
         eventEmitter.on('respu', confirmacion => {
-            terminado = true;
             if (confirmacion == true) {
                 api.deleteMessage({
                     chat_id: message.chat.id,
                     message_id: mensaje_id
                 })
                 return resolve('ha aceptado');
-            } else {
-
-                api.deleteMessage({
-                    chat_id: message.chat.id,
-                    message_id: mensaje_id
-                })
-                return reject('Has cancelado la operación');
             }
-        });
+            api.deleteMessage({
+                chat_id: message.chat.id,
+                message_id: mensaje_id
+            })
+            return reject('Has cancelado la operación');
+        })
+
         setTimeout(() => {
-            if (!terminado) {
-                api.deleteMessage({
-                    chat_id: message.chat.id,
-                    message_id: mensaje_id
-                })
-                return reject('tiempo limite excedido');
-            }
+            reject('tiempo limite excedido')
         }, 20000);
-
     });
 }
 

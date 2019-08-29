@@ -25,8 +25,6 @@ api.on('inline.callback.query', function(message) {
     api.answerCallbackQuery({
         callback_query_id: message.id,
         text: message.data
-    }, (err, res) => {
-        if (err) console.log('error', err);
     });
     console.log('evento 1');
     eventEmitter.emit('respuesta', message);

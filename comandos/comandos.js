@@ -1,4 +1,5 @@
 const crear = require('./crear');
+const entrada = require('./entrada');
 
 let f_procesa_comando = (message) => {
 
@@ -11,8 +12,8 @@ let f_procesa_comando = (message) => {
             crear.f_procesa_crear(message);
             break;
 
-        case "/recarga":
-            ///////////////////
+        case "/entrada":
+            entrada.f_procesa_entrada(message);
             break;
 
         default:

@@ -35,7 +35,7 @@ let f_procesa_crear = (message) => {
                                 })
                                 .catch(err => {
                                     console.log(err);
-                                    enviar.f_manda_mensaje(message.chat.id, 'El usuario no se ha creado, ha ocurrido un error');
+                                    enviar.f_manda_mensaje(message.chat.id, err);
                                 });
 
                         })
