@@ -20,6 +20,7 @@ let escucha_eventos = (message) => {
             console.log('selected NOOOO');
             confirmacion = false;
         }
+
         eventEmitter.emit('respu', confirmacion);
     }
 }
@@ -39,34 +40,41 @@ let KeyBoard = {
     one_time_keyboard: true
 };
 
+var mensaje_id;
 let f_confirmacion = (message, text) => {
 
     return new Promise((resolve, reject) => {
-        var mensaje_id;
+        console.log('inicio promesa');
         api.sendMessage({
             chat_id: message.chat.id,
             text,
             reply_to_message_id: message.message_id,
             reply_markup: JSON.stringify(KeyBoard)
         }, (err, res) => {
+            console.log('enviando mensaje');
             if (err) console.log(err);
             console.log(res.message_id);
             console.log(res.message_id);
+            mensaje_id = res.message_id;
+            mensaje_id = res.message_id;
             mensaje_id = res.message_id;
         });
 
         var terminado = false;
 
-        eventEmitter.on('respu', confirmacion => {
+        eventEmitter.once('respu', confirmacion => {
+            console.log('salta evento');
+            clearTimeout(time_fuera);
             terminado = true;
             if (confirmacion == true) {
+                console.log('confirmacion y borrando ', mensaje_id);
                 api.deleteMessage({
                     chat_id: message.chat.id,
                     message_id: mensaje_id
                 })
                 return resolve('ha aceptado');
             } else {
-
+                console.log('cancelacion y borrando ', mensaje_id);
                 api.deleteMessage({
                     chat_id: message.chat.id,
                     message_id: mensaje_id
@@ -74,15 +82,21 @@ let f_confirmacion = (message, text) => {
                 return reject('Has cancelado la operación');
             }
         });
-        setTimeout(() => {
+
+        let time_fuera = setTimeout(() => {
             if (!terminado) {
+                console.log('tiempo y borrando ', mensaje_id);
                 api.deleteMessage({
                     chat_id: message.chat.id,
                     message_id: mensaje_id
                 })
                 return reject('tiempo limite excedido');
+            } else {
+                clearTimeout(this);
             }
-        }, 20000);
+            console.log(mensaje_id);
+            mensaje_id = null;
+        }, 10000);
 
     });
 }
