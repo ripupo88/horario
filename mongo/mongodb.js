@@ -31,16 +31,18 @@ let confirma_entrada = (empleado) => {
     })
 }
 
-let f_nueva_entrada = (id) => {
-    let registro = new Registro({
-        entrada: Date.now(),
-        empleado: "5d63f85511189525fcc7e37f"
-    });
+let f_nueva_entrada = (entrada, empleado) => {
+    return new Promise((resolve, reject) => {
+        let registro = new Registro({
+            entrada,
+            empleado
+        });
 
-    registro.save((err, res) => {
-        if (err) console.log(err);
-        console.log(res);
-    });
+        registro.save((err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    })
 }
 
 //f_nuevo_usuario();
@@ -63,4 +65,4 @@ let f_confirma_telegram_id = (telegram_id) => {
     });
 }
 
-module.exports = { f_confirma_telegram_id, f_nuevo_usuario, confirma_entrada };
+module.exports = { f_confirma_telegram_id, f_nuevo_usuario, confirma_entrada, f_nueva_entrada };

@@ -1,6 +1,8 @@
 const crear = require('./crear');
 const entrada = require('./entrada');
 
+var entrada_bool = true;
+
 let f_procesa_comando = (message) => {
 
     let re = /^\/[a-z]*/ig;
@@ -13,7 +15,13 @@ let f_procesa_comando = (message) => {
             break;
 
         case "/entrada":
-            entrada.f_procesa_entrada(message);
+            if (entrada_bool) {
+                entrada_bool = false;
+                entrada.f_procesa_entrada(message)
+                    .then(() => {
+                        entrada_bool = true;
+                    });
+            }
             break;
 
         default:

@@ -53,10 +53,7 @@ let f_confirmacion = (message, text) => {
         }, (err, res) => {
             console.log('enviando mensaje');
             if (err) console.log(err);
-            console.log(res.message_id);
-            console.log(res.message_id);
-            mensaje_id = res.message_id;
-            mensaje_id = res.message_id;
+
             mensaje_id = res.message_id;
         });
 
@@ -81,6 +78,7 @@ let f_confirmacion = (message, text) => {
                 })
                 return reject('Has cancelado la operación');
             }
+            clearTimeout(this);
         });
 
         let time_fuera = setTimeout(() => {
@@ -91,8 +89,6 @@ let f_confirmacion = (message, text) => {
                     message_id: mensaje_id
                 })
                 return reject('tiempo limite excedido');
-            } else {
-                clearTimeout(this);
             }
             console.log(mensaje_id);
             mensaje_id = null;
