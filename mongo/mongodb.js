@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 mongoose.connect('mongodb://localhost/horariodb', { useNewUrlParser: true });
+mongoose.set('useFindAndModify', false);
 
 const Usuario = require('./schemas/usuario');
 const Registro = require('./schemas/registro');
@@ -48,25 +49,30 @@ let f_nueva_entrada = (entrada, empleado) => {
 
 let f_nueva_salida = (salida, empleado) => {
     return new Promise((resolve, reject) => {
-        console.log('salida', salida);
+
+        encuentra_entrada(empleado, salida).then(duration => {
+
+            Registro.findOneAndUpdate({ empleado: empleado, fin: false }, { salida, fin: true, jornada: duration }, (err, res) => {
+                if (err) console.log(err);
+                resolve({
+                    res,
+                    jornada: duration
+                })
+            });
+
+        }).catch(err => { console.log(err) });
+    });
+}
+
+let encuentra_entrada = (empleado, salida) => {
+    return new Promise((resolve, reject) => {
         Registro.find({ empleado: empleado, fin: false }, (err, res) => {
-            if (err) console.log(err);
-            console.log(moment(moment(salida).diff(moment(res.entrada))).format("m[m] s[s]"));
-        })
-        Registro.findOneAndUpdate({ empleado: empleado, fin: false }, { salida, fin: true }, (err, res) => {
             if (err) reject(err);
-            resolve(res);
+            var duration = moment.duration(new moment(salida).diff(new moment(res[0].entrada)));
+            resolve(duration);
         })
     })
 }
-
-//f_nuevo_usuario();
-// f_nueva_entrada();
-
-Registro.find({}, (err, res) => {
-    if (err) console.log(err);
-    console.log(res);
-});
 
 
 let f_confirma_telegram_id = (telegram_id) => {

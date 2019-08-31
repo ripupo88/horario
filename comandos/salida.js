@@ -42,9 +42,13 @@ let f_procesando_salida = async(message) => {
 }
 
 let notifica_usuario = async(chat_id, entrada, empleado) => {
-    let fecha = moment(entrada.salida).format('DD-MM-YYYY');;
-    let hora = moment(entrada.salida).format('HH:mm:ss');
-    let text = `${empleado} ha fichado su salida\na las ${hora}\nel dia ${fecha}`;
+    let fecha = moment(entrada.res.salida).format('DD-MM-YYYY');;
+    let hora = moment(entrada.res.salida).format('HH:mm:ss');
+    let duracion = entrada.jornada;
+    let horas = duracion.hours();
+    let minutos = duracion.minutes();
+    console.log(entrada);
+    let text = `${empleado} ha fichado su salida\na las ${hora}\nel dia ${fecha}\nsu jornada ha durado\n${horas} horas ${minutos} minutos`;
     enviar.f_manda_mensaje(chat_id, text);
 }
 

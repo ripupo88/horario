@@ -11,7 +11,7 @@ let f_procesa_crear = (message) => {
                 if (creador_mensaje[0].role == "ADMIN_ROLE") {
 
                     let mensaje_separado = message.text.split(",");
-
+                    console.log(message);
                     let nombre = mensaje_separado[0].replace(/\/crear /g, "").trim();
                     let nif = mensaje_separado[1].trim();
                     let alias = mensaje_separado[2].trim();
