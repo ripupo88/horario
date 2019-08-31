@@ -11,6 +11,7 @@ const registro_schema = new mongoose.Schema({
         default: false
     },
     salida: Date,
+    jornada: Number,
     empleado: {
         type: Schema.ObjectId,
         ref: "'usuario"

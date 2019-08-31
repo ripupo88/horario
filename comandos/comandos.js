@@ -1,5 +1,6 @@
 const crear = require('./crear');
 const entrada = require('./entrada');
+const salida = require('./salida');
 
 var entrada_bool = true;
 
@@ -22,6 +23,10 @@ let f_procesa_comando = (message) => {
                         entrada_bool = true;
                     });
             }
+            break;
+
+        case "/salida":
+            salida.f_procesa_salida(message);
             break;
 
         default:

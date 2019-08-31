@@ -1,5 +1,6 @@
 "use strict";
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 mongoose.connect('mongodb://localhost/horariodb', { useNewUrlParser: true });
 
@@ -45,6 +46,20 @@ let f_nueva_entrada = (entrada, empleado) => {
     })
 }
 
+let f_nueva_salida = (salida, empleado) => {
+    return new Promise((resolve, reject) => {
+        console.log('salida', salida);
+        Registro.find({ empleado: empleado, fin: false }, (err, res) => {
+            if (err) console.log(err);
+            console.log(moment(moment(salida).diff(moment(res.entrada))).format("m[m] s[s]"));
+        })
+        Registro.findOneAndUpdate({ empleado: empleado, fin: false }, { salida, fin: true }, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        })
+    })
+}
+
 //f_nuevo_usuario();
 // f_nueva_entrada();
 
@@ -65,4 +80,4 @@ let f_confirma_telegram_id = (telegram_id) => {
     });
 }
 
-module.exports = { f_confirma_telegram_id, f_nuevo_usuario, confirma_entrada, f_nueva_entrada };
+module.exports = { f_confirma_telegram_id, f_nuevo_usuario, confirma_entrada, f_nueva_entrada, f_nueva_salida };
