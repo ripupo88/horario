@@ -10,7 +10,7 @@ global.html2pdf = {};
 global.btoa = () => {};
 
 const fs = require("fs");
-const jsPDF = require("jspdf");
+const jsPDF = require("jspdf/dist/jspdf.node.debug");
 const moment = require("moment");
 const enviar = require("../telegram/enviar");
 
