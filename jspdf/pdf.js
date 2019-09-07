@@ -14,6 +14,8 @@ const jsPDF = require("jspdf");
 const moment = require("moment");
 const enviar = require("../telegram/enviar");
 
+global.jsPDF = jsPDF;
+
 moment.locale("es");
 
 require("jspdf-autotable");
