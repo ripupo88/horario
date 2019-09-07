@@ -42,7 +42,7 @@ let KeyBoard = {
 
 var mensaje_id;
 let f_confirmacion = (message, text) => {
-
+    let borrado = false;
     return new Promise((resolve, reject) => {
         console.log('inicio promesa');
         api.sendMessage({
@@ -65,35 +65,36 @@ let f_confirmacion = (message, text) => {
             terminado = true;
             if (confirmacion == true) {
                 console.log('confirmacion y borrando ', mensaje_id);
-                api.deleteMessage({
-                    chat_id: message.chat.id,
-                    message_id: mensaje_id
-                })
+                borra_mensaje(message.chat.id, mensaje_id);
                 return resolve('ha aceptado');
             } else {
                 console.log('cancelacion y borrando ', mensaje_id);
-                api.deleteMessage({
-                    chat_id: message.chat.id,
-                    message_id: mensaje_id
-                })
+                borra_mensaje(message.chat.id, mensaje_id);
                 return reject('Has cancelado la operación');
             }
             clearTimeout(this);
         });
 
         let time_fuera = setTimeout(() => {
+            console.log('se ejecuta el timeout');
             if (!terminado) {
                 console.log('tiempo y borrando ', mensaje_id);
-                api.deleteMessage({
-                    chat_id: message.chat.id,
-                    message_id: mensaje_id
-                })
+                borra_mensaje(message.chat.id, mensaje_id);
                 return reject('tiempo limite excedido');
             }
             console.log(mensaje_id);
             mensaje_id = null;
         }, 10000);
 
+        let borra_mensaje = (chat, messg) => {
+            if (!borrado) {
+                borrado = true;
+                api.deleteMessage({
+                    chat_id: chat,
+                    message_id: messg
+                })
+            }
+        }
     });
 }
 
