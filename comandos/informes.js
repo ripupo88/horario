@@ -1,37 +1,39 @@
-const moment = require('moment');
-const mongo = require('../mongo/mongodb');
-const jspdf = require('../jspdf/pdf');
+const moment = require("moment");
+const mongo = require("../mongo/mongodb");
+const jspdf = require("../jspdf/pdf");
+const enviar = require("../telegram/enviar");
 
 let f_procesa_informes = async message => {
   try {
     let creador_mensaje = await mongo.f_confirma_telegram_id(message.from.id);
-    if (creador_mensaje.role == 'ADMIN_ROLE') {
-      let mes = f_obten_mes(message);
-      if (mes >= 0 && mes < 49) {
-        f_informes_todos(mes, message.from.id);
-      } else {
-        throw new Error('fecha incorrecta');
-      }
+    let mes = f_obten_mes(message);
+    if (creador_mensaje.role == "ADMIN_ROLE") {
+      f_informes_todos(mes, message.from.id);
     } else {
-      console.log('user SOLO');
+      f_informe(creador_mensaje, mes, creador_mensaje.telegram_id);
     }
   } catch (e) {
-    console.log(e);
+    enviar.f_manda_mensaje(message.chat.id, e.toString());
   }
 };
 
 let f_obten_mes = message => {
-  let fecha_recibida = message.text.replace(/\/informe /g, '').trim();
-  let la_fecha = fecha_recibida.split('-');
+  let fecha_recibida = message.text.replace(/\/informe /g, "").trim();
+  let la_fecha = fecha_recibida.split("-");
   let mes = parseInt(la_fecha[0]);
   let anno = parseInt(la_fecha[1]);
   let fecha_solicitud = new moment(
-    '20' + anno + '-' + mes + '-01',
-    'YYYY-MM-DD'
+    "20" + anno + "-" + mes + "-01",
+    "YYYY-MM-DD"
   );
+
   let hoy = new moment();
-  let numero_meses = hoy.diff(fecha_solicitud, 'months');
-  return numero_meses;
+  let numero_meses = hoy.diff(fecha_solicitud, "months");
+  if (mes >= 0 && mes < 49) {
+    return numero_meses;
+  } else {
+    throw new Error("fecha incorrecta");
+  }
 };
 
 let f_informes_todos = async (mes, destino) => {

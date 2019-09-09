@@ -1,14 +1,14 @@
-const mongo = require('../mongo/mongodb');
-const enviar = require('../telegram/enviar');
-const confirmar = require('../telegram/confirmacion');
-const moment = require('moment');
+const mongo = require("../mongo/mongodb");
+const enviar = require("../telegram/enviar");
+const confirmar = require("../telegram/confirmacion");
+const moment = require("moment");
 
 let f_procesa_entrada = message => {
   this.message = message;
   return new Promise((resolve, reject) => {
     f_procesando_entrada(message)
       .then(data => {
-        console.log('entrada fichada');
+        console.log("entrada fichada");
         resolve();
       })
       .catch(err => {
@@ -35,7 +35,7 @@ let f_procesando_entrada = async message => {
     message,
     `Hola ${empleado.alias}, ¿quieres fichar tu entrada a las ${moment
       .unix(message.date)
-      .format('HH:mm')}?`
+      .format("HH:mm")}?`
   );
 
   //registrar en la DB
@@ -49,17 +49,17 @@ let f_procesando_entrada = async message => {
 };
 
 let notifica_usuario = async (chat_id, entrada, empleado) => {
-  let fecha = moment(entrada.entrada).format('DD-MM-YYYY');
-  let hora = moment(entrada.entrada).format('HH:mm:ss');
+  let fecha = moment(entrada.entrada).format("DD-MM-YYYY");
+  let hora = moment(entrada.entrada).format("HH:mm:ss");
   let text = `${empleado} ha fichado su entrada\na las ${hora}\nel dia ${fecha}`;
   enviar.f_manda_mensaje(chat_id, text);
 };
 
 let si_turno_abierto = async (registro, duplicado) => {
   if (registro[0] != undefined) {
-    throw new Error('Ya tienes un turno abierto, ficha la salida.');
+    throw new Error("Ya tienes un turno abierto, ficha la salida.");
   } else if (duplicado[0] != undefined) {
-    throw new Error('Hoy ya has fichado, puedes volver a fichar mañana.');
+    throw new Error("Hoy ya has fichado, puedes volver a fichar mañana.");
   } else {
     return;
   }
