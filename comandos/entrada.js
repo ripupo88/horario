@@ -33,7 +33,7 @@ let f_procesando_entrada = async message => {
   //pedir confirmacion al empleado
   await confirmar.f_confirmacion(
     message,
-    `Hola ${empleado[0].alias}, ¿quieres fichar tu entrada a las ${moment
+    `Hola ${empleado.alias}, ¿quieres fichar tu entrada a las ${moment
       .unix(message.date)
       .format('HH:mm')}?`
   );
@@ -41,11 +41,11 @@ let f_procesando_entrada = async message => {
   //registrar en la DB
   let entrada_fichada = await mongo.f_nueva_entrada(
     moment.unix(message.date).toISOString(),
-    empleado[0].id
+    empleado.id
   );
 
   //notifica usuario
-  await notifica_usuario(message.chat.id, entrada_fichada, empleado[0].alias);
+  await notifica_usuario(message.chat.id, entrada_fichada, empleado.alias);
 };
 
 let notifica_usuario = async (chat_id, entrada, empleado) => {

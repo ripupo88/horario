@@ -6,7 +6,7 @@ let f_procesa_crear = async message => {
   try {
     let creador_mensaje = await mongo.f_confirma_telegram_id(message.from.id);
 
-    if (creador_mensaje[0].role == 'ADMIN_ROLE') {
+    if (creador_mensaje.role == 'ADMIN_ROLE') {
       let mensaje_separado = message.text.split(',');
 
       let nuevo_usuario = {
