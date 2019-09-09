@@ -80,7 +80,10 @@ let f_crea_pdf = (registro, empleado, destino) => {
           content: "EMPRESA:",
           styles: { minCellHeight: 10, valign: "bottom" }
         },
-        "CIF",
+        {
+          content: "CIF:",
+          styles: { minCellHeight: 10, valign: "bottom" }
+        },
         "",
         ""
       ],
@@ -98,7 +101,10 @@ let f_crea_pdf = (registro, empleado, destino) => {
           content: "EMPLEADO:",
           styles: { minCellHeight: 10, valign: "bottom" }
         },
-        "NIF/NIE:",
+        {
+          content: "NIF,NIE:",
+          styles: { minCellHeight: 10, valign: "bottom" }
+        },
         "",
         ""
       ],
