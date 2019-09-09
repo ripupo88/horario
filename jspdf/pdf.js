@@ -49,7 +49,7 @@ let f_crea_pdf = (registro, empleado, destino) => {
         hora_entrada = new moment(element.entrada).format("HH:mm");
         hora_salida = new moment(element.salida).format("HH:mm");
         duracion_horas = new moment(element.jornada).hours();
-        duracion_minutos = new moment(element.jornada).minutes();
+        duracion_minutos = new moment(element.jornada).minutes().format("mm");
         duracion = duracion_horas + ":" + duracion_minutos;
 
         return;
@@ -65,7 +65,7 @@ let f_crea_pdf = (registro, empleado, destino) => {
     tableLineWidth: 0.1,
     tableLineColor: 0,
     styles: {
-      fontSize: 10,
+      fontSize: 9,
       cellWidth: "wrap"
     },
     head: [["Día", "Entrada", "Salida", "Jornada"]],
