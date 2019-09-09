@@ -48,9 +48,7 @@ let f_crea_pdf = (registro, empleado, destino) => {
       if (fecha_hoy == i + 1) {
         hora_entrada = new moment(element.entrada).format("HH:mm");
         hora_salida = new moment(element.salida).format("HH:mm");
-        duracion_horas = new moment(element.jornada).hours();
-        duracion_minutos = new moment(element.jornada).minutes().format("mm");
-        duracion = duracion_horas + ":" + duracion_minutos;
+        duracion = new moment(element.jornada).format("HH:mm");
 
         return;
       }

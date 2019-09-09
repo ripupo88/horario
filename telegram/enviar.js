@@ -15,7 +15,7 @@ let f_manda_mensaje = (chat_id, text) => {
 
 let f_enviar_doc = (doc, chat_id) => {
   let document = fs.createReadStream(`./informes/${doc}.pdf`);
-  console.log(document.path);
+
   api.sendDocument({
     chat_id,
     document: document.path
