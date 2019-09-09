@@ -48,7 +48,7 @@ let f_crea_pdf = (registro, empleado, destino) => {
       if (fecha_hoy == i + 1) {
         hora_entrada = new moment(element.entrada).format("HH:mm");
         hora_salida = new moment(element.salida).format("HH:mm");
-        duracion = new moment(element.jornada).format("HH:mm");
+        duracion = new moment(element.jornada).format("H:mm");
 
         return;
       }
@@ -63,7 +63,7 @@ let f_crea_pdf = (registro, empleado, destino) => {
     tableLineWidth: 0.1,
     tableLineColor: 0,
     styles: {
-      fontSize: 9,
+      fontSize: 8,
       cellWidth: "wrap"
     },
     head: [["Día", "Entrada", "Salida", "Jornada"]],
