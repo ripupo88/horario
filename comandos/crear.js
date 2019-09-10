@@ -15,11 +15,6 @@ let f_procesa_crear = async message => {
         alias: mensaje_separado[2].trim(),
         telegram_id: message.reply_to_message.from.id
       };
-      let texto_confirmacion = `¿confirmas la creacion de ${nuevo_usuario.alias}\nnombre${nuevo_usuario.nombre}\nNIF${nuevo_usuario.nif}\n`;
-      await confirmar.f_confirmacion(message, texto_confirmacion).catch(err => {
-        console.log(err);
-        throw new Error('El usuario no se ha creado, ha ocurrido un error');
-      });
 
       let usuario = await mongo.f_nuevo_usuario(nuevo_usuario);
 

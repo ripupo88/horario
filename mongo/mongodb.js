@@ -59,13 +59,13 @@ let f_nueva_entrada = (entrada, empleado) => {
   });
 };
 
-let f_nueva_salida = (salida, empleado) => {
+let f_nueva_salida = (salida, empleado, validado) => {
   return new Promise((resolve, reject) => {
     f_encuentra_entrada(empleado, salida)
       .then(duration => {
         Registro.findOneAndUpdate(
           { empleado: empleado, fin: false },
-          { salida, fin: true, jornada: duration },
+          { salida, fin: true, jornada: duration, validado },
           (err, res) => {
             if (err) console.log(err);
             resolve({
