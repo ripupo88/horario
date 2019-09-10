@@ -1,125 +1,129 @@
-const telegram = require('telegram-bot-api');
-const telegram_config = require('../privado/telegram.config');
-const events = require('events');
+const telegram = require("telegram-bot-api");
+const telegram_config = require("../privado/telegram.config");
+const events = require("events");
 
 // Create an eventEmitter object
 let eventEmitter = new events.EventEmitter();
 
 var api = new telegram({
-  token: telegram_config.telegram_config.token
+   token: telegram_config.telegram_config.token
 });
 
 let escucha_eventos = message => {
-  api.deleteMessage({
-    chat_id: message.chat.id,
-    message_id: message.message_id
-  });
-  console.log('evento 3', message);
-  var confirmacion;
-  if (message.location != undefined) {
-    confirmacion = f_comprueba_ubicacion(
-      message.location.latitude,
-      message.location.longitude
-    );
-  } else {
-    confirmacion = 'no';
-  }
+   api.deleteMessage({
+      chat_id: message.chat.id,
+      message_id: message.message_id
+   });
+   console.log("evento 3", message);
+   var confirmacion;
+   if (message.location != undefined) {
+      confirmacion = f_comprueba_ubicacion(
+         message.location.latitude,
+         message.location.longitude
+      );
+   } else {
+      confirmacion = "no";
+   }
 
-  eventEmitter.emit('respu', confirmacion);
+   eventEmitter.emit("respu", { confirmacion, message });
 };
 
 let f_comprueba_ubicacion = (longitud, latitud) => {
-  if (
-    longitud <= 28.4879 &&
-    longitud >= 28.4868 &&
-    latitud >= -16.3838 &&
-    latitud <= -16.3823
-  ) {
-    return 'si';
-  } else {
-    return 'location';
-  }
+   if (
+      true
+      // longitud <= 28.4879 &&
+      // longitud >= 28.4868 &&
+      // latitud >= -16.3838 &&
+      // latitud <= -16.3823
+   ) {
+      return "si";
+   } else {
+      return "location";
+   }
 };
 
 let KeyBoard = {
-  keyboard: [
-    [
-      {
-        text: 'Confirmar',
-        request_location: true
-        // callback_data: 'si'
-      },
-      {
-        text: 'Cancelar'
-        // callback_data: 'no'
-      }
-    ]
-  ],
-  one_time_keyboard: true
+   keyboard: [
+      [
+         {
+            text: "Confirmar",
+            request_location: true
+            // callback_data: 'si'
+         },
+         {
+            text: "Cancelar"
+            // callback_data: 'no'
+         }
+      ]
+   ],
+   resize_keyboard: true,
+   one_time_keyboard: true
 };
 
-var mensaje_id;
 let f_confirmacion = (message, text) => {
-  let borrado = false;
-  return new Promise((resolve, reject) => {
-    console.log('inicio promesa');
-    api.sendMessage(
-      {
-        chat_id: message.chat.id,
-        text,
-        reply_to_message_id: message.message_id,
-        reply_markup: JSON.stringify(KeyBoard)
-      },
-      (err, res) => {
-        console.log('enviando mensaje');
-        if (err) console.log(err);
+   return new Promise((resolve, reject) => {
+      var mensaje_id;
+      let borrado = false;
+      console.log("inicio promesa");
+      api.sendMessage(
+         {
+            chat_id: message.chat.id,
+            text,
+            reply_to_message_id: message.message_id,
+            reply_markup: JSON.stringify(KeyBoard)
+         },
+         (err, res) => {
+            console.log("enviando mensaje");
+            if (err) console.log(err);
 
-        mensaje_id = res.message_id;
-      }
-    );
+            mensaje_id = res.message_id;
+         }
+      );
 
-    var terminado = false;
+      var terminado = false;
 
-    eventEmitter.once('respu', confirmacion => {
-      console.log('salta evento');
-      clearTimeout(time_fuera);
-      terminado = true;
-      if (confirmacion == 'si') {
-        console.log('confirmacion y borrando ', mensaje_id);
-        borra_mensaje(message.chat.id, mensaje_id);
-        return resolve(true);
-      } else if (confirmacion == 'location') {
-        console.log('Error de ubicacion', mensaje_id);
-        borra_mensaje(message.chat.id, mensaje_id);
-        return resolve(false);
-      } else {
-        console.log('cancelacion y borrando ', mensaje_id);
-        borra_mensaje(message.chat.id, mensaje_id);
-        return reject('Has cancelado la operación');
-      }
-    });
+      eventEmitter.on("respu", confirm => {
+         if (confirm.message.from.id === message.chat.id) {
+            console.log("salta evento");
+            clearTimeout(time_fuera);
+            terminado = true;
+            if (confirm.confirmacion == "si") {
+               console.log("confirmacion y borrando ", mensaje_id);
+               borra_mensaje(message.chat.id, mensaje_id);
+               return resolve(true);
+            } else if (confirm.confirmacion == "location") {
+               console.log("Error de ubicacion", mensaje_id);
+               borra_mensaje(message.chat.id, mensaje_id);
+               return resolve(false);
+            } else {
+               console.log("cancelacion y borrando ", mensaje_id);
+               borra_mensaje(message.chat.id, mensaje_id);
+               return reject("Has cancelado la operación");
+            }
+         }
+      });
 
-    let time_fuera = setTimeout(() => {
-      console.log('se ejecuta el timeout');
-      if (!terminado) {
-        console.log('tiempo y borrando ', mensaje_id);
-        borra_mensaje(message.chat.id, mensaje_id);
-        return reject('tiempo limite excedido');
-      }
-      console.log(mensaje_id);
-      mensaje_id = null;
-    }, 20000);
+      let time_fuera = setTimeout(() => {
+         console.log("se ejecuta el timeout");
+         if (!terminado) {
+            console.log("tiempo y borrando ", mensaje_id);
+            borra_mensaje(message.chat.id, mensaje_id);
+            return reject("tiempo limite excedido");
+         }
+         console.log(mensaje_id);
+         mensaje_id = null;
+      }, 20000);
 
-    let borra_mensaje = (chat, messg) => {
-      if (!borrado) {
-        borrado = true;
-        api.deleteMessage({
-          chat_id: chat,
-          message_id: messg
-        });
-      }
-    };
-  });
+      let borra_mensaje = (chat, messg) => {
+         if (!borrado) {
+            borrado = true;
+            api.deleteMessage({
+               chat_id: chat,
+               message_id: messg
+            });
+         }
+      };
+   });
 };
 
 module.exports = { f_confirmacion, escucha_eventos };
