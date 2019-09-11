@@ -11,11 +11,27 @@ mongoose.connect(
   }
 );
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 const Usuario = require('./schemas/usuario');
 const Registro = require('./schemas/registro');
 const Empresa = require('./schemas/empresa');
 
+let iniciar_DB = () => {
+  Usuario.find({}, (err, res) => {
+    if (err) console.log(err);
+    if (res[0] == undefined) {
+      f_nuevo_usuario({
+        nombre: 'Admin',
+        nif: 'Administrador',
+        role: 'ADMIN_ROLE',
+        alias: 'Admin',
+        correo: 'ripupo88@gmail.com',
+        telegram_id: 777069558
+      });
+    }
+  });
+};
 let f_nuevo_usuario = objeto_usuario => {
   return new Promise((resolve, reject) => {
     let usuario = new Usuario(objeto_usuario);
@@ -29,15 +45,6 @@ let f_nuevo_usuario = objeto_usuario => {
     });
   });
 };
-
-// f_nuevo_usuario({
-//    nombre: "Richar Pupo",
-//    nif: "Y4907588T",
-//    role: "ADMIN_ROLE",
-//    alias: "Richar",
-//    correo: "ripupo88@gmail.com",
-//    telegram_id: 823806648
-// });
 
 let confirma_entrada = empleado => {
   return new Promise((resolve, reject) => {
@@ -130,14 +137,27 @@ let f_confirma_telegram_id = telegram_id => {
   });
 };
 
-let f_obten_empleados = () => {
+let f_obten_empleados = empresa => {
   return new Promise((resolve, reject) => {
-    Usuario.find({ role: 'USER_ROLE', activo: true }, (err, res) => {
+    Usuario.find({ role: 'USER_ROLE', activo: true, empresa }, (err, res) => {
       if (err) {
         reject(err);
       }
       resolve(res);
     });
+  });
+};
+
+let f_obten_empresa_admin = admin => {
+  return new Promise((resolve, reject) => {
+    Empresa.find({ admin })
+      .populate({ path: 'admin', model: Usuario })
+      .exec((err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
+      });
   });
 };
 
@@ -279,5 +299,6 @@ module.exports = {
   f_crea_empresa,
   f_obten_empresa,
   f_empresa,
-  f_obten_admin
+  f_obten_admin,
+  f_obten_empresa_admin
 };
