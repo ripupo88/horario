@@ -10,18 +10,12 @@ let f_procesa_entrada = async message => {
         let empleado = await mongo.f_confirma_telegram_id(message.from.id);
         if (empleado.role == 'ADMIN_ROLE')
             throw new Error('Los administradores no fichan');
-        //paso 2- verificar que no tenga una entrada ya abierta ... devuelve la entrada abierta si existe
         let registro = await mongo.confirma_entrada(empleado);
         if (registro[0] != undefined)
-            throw new Error('Ya tienes un turno abierto, ficha la salida.');
-        //impide que se pueda fichar 2 veces un mismo dia
+            throw new Error('Ya tienes un turno abierto.');
         let duplicado = await mongo.f_busca_duplicado(empleado);
-        if (duplicado[0] != undefined)
-            throw new Error(
-                'Hoy ya has fichado, puedes volver a fichar mañana.'
-            );
+        if (duplicado[0] != undefined) throw new Error('Hoy ya has fichado.');
 
-        //pedir confirmacion al empleado
         let res_confirma = await confirmar.f_confirmacion(
             message,
             `Hola ${
@@ -32,12 +26,12 @@ let f_procesa_entrada = async message => {
         );
         if (!res_confirma)
             throw new Error('Su ubicacion NO es correcta, no puede fichar');
-        //registrar en la DB
+
         let entrada_fichada = await mongo.f_nueva_entrada(
             moment.unix(message.date).toISOString(),
             empleado.id
         );
-        //notifica usuario y admin
+
         let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
         await notifica_usuario(

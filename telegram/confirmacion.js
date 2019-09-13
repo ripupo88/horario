@@ -47,11 +47,9 @@ let KeyBoard = {
             {
                 text: 'Confirmar',
                 request_location: true
-                // callback_data: 'si'
             },
             {
                 text: 'Cancelar'
-                // callback_data: 'no'
             }
         ]
     ],
