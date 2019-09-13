@@ -11,6 +11,7 @@ let api = new telegram({
 });
 
 api.on('message', function(message) {
+    console.log(message);
     if (message.location != undefined || message.text == 'Cancelar') {
         eventEmitter.emit('respuesta', message);
     } else {
