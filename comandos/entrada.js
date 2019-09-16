@@ -5,22 +5,19 @@ const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
     try {
-        /*ELIMINANDO QUE SE PUEDA FICHAR ENTRADA DOS VECES
-         *
-         *
-         * NO OLVIDAR
-         *
-         *
-         * NO OLVIDAR
-         *
-         */
+        let indice = 0;
         if (mensajes_abiertos[0] != undefined) {
             for (let cada_id of mensajes_abiertos) {
-                if (cada_id == message.from.id)
-                    throw new Error('Solo una entrada a la vez');
-                mensajes_abiertos.push(message.from.id);
+                if (cada_id == message.from.id) {
+                    return;
+                }
+                indice++;
             }
+            mensajes_abiertos.push(message.from.id);
+        } else {
+            mensajes_abiertos.push(message.from.id);
         }
+        console.log(mensajes_abiertos);
         if (message.from.id != message.chat.id)
             throw new Error('Solo se puede fichar desde el chat privado');
         let empleado = await mongo.f_confirma_telegram_id(message.from.id);
@@ -40,6 +37,14 @@ let f_procesa_entrada = async message => {
                 .unix(message.date)
                 .format('H:mm')}?`
         );
+        let indice2 = 0;
+        for (let cada_id of mensajes_abiertos) {
+            if (cada_id == message.from.id) {
+                mensajes_abiertos.splice(indice2, 1);
+                continue;
+            }
+            indice2++;
+        }
         if (!res_confirma)
             throw new Error('Su ubicacion NO es correcta, no puede fichar');
 
@@ -61,6 +66,14 @@ let f_procesa_entrada = async message => {
             empleado.alias
         );
     } catch (err) {
+        let indice3 = 0;
+        for (let cada_id of mensajes_abiertos) {
+            if (cada_id == message.from.id) {
+                mensajes_abiertos.splice(indice3, 1);
+                continue;
+            }
+            indice2++;
+        }
         console.log(err);
         enviar.f_manda_mensaje(message.chat.id, err.toString());
     }

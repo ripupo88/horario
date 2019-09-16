@@ -2,9 +2,21 @@ const mongo = require('../mongo/mongodb');
 const enviar = require('../telegram/enviar');
 const confirmar = require('../telegram/confirmacion');
 const moment = require('moment');
-
+let mensajes_abiertos = [];
 let f_procesa_salida = async message => {
     try {
+        let indice = 0;
+        if (mensajes_abiertos[0] != undefined) {
+            for (let cada_id of mensajes_abiertos) {
+                if (cada_id == message.from.id) {
+                    return;
+                }
+                indice++;
+            }
+            mensajes_abiertos.push(message.from.id);
+        } else {
+            mensajes_abiertos.push(message.from.id);
+        }
         if (message.from.id != message.chat.id)
             throw new Error('Solo se puede fichar desde el chat privado');
         let empleado = await mongo.f_confirma_telegram_id(message.from.id);
@@ -15,12 +27,20 @@ let f_procesa_salida = async message => {
             throw new Error('No tienes fichada una entrada, ficha la entrada.');
         let res_confirma = await confirmar.f_confirmacion(
             message,
-            `Hola *${
+            `Hola ${
                 empleado.alias
-            }*, ¿quieres fichar tu salida a las *${moment
+            }, ¿quieres fichar tu salida a las ${moment
                 .unix(message.date)
-                .format('H:mm')}*?`
+                .format('H:mm')}?`
         );
+        let indice2 = 0;
+        for (let cada_id of mensajes_abiertos) {
+            if (cada_id == message.from.id) {
+                mensajes_abiertos.splice(indice2, 1);
+                continue;
+            }
+            indice2++;
+        }
         if (res_confirma) {
             //registrar en la DB
             let salida_fichada = await mongo.f_nueva_salida(
@@ -69,6 +89,14 @@ let f_procesa_salida = async message => {
             );
         }
     } catch (err) {
+        let indice3 = 0;
+        for (let cada_id of mensajes_abiertos) {
+            if (cada_id == message.from.id) {
+                mensajes_abiertos.splice(indice3, 1);
+                continue;
+            }
+            indice2++;
+        }
         console.log(err);
         console.log(message.chat.id);
         enviar.f_manda_mensaje(message.chat.id, err.toString());
