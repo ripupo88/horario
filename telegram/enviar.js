@@ -9,7 +9,8 @@ var api = new telegram({
 let f_manda_mensaje = (chat_id, text) => {
     api.sendMessage({
         chat_id,
-        text
+        text,
+        parse_mode: 'Markdown'
     });
 };
 

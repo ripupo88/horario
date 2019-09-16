@@ -2,9 +2,25 @@ const mongo = require('../mongo/mongodb');
 const enviar = require('../telegram/enviar');
 const confirmar = require('../telegram/confirmacion');
 const moment = require('moment');
-
+let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
     try {
+        /*ELIMINANDO QUE SE PUEDA FICHAR ENTRADA DOS VECES
+         *
+         *
+         * NO OLVIDAR
+         *
+         *
+         * NO OLVIDAR
+         *
+         */
+        if (mensajes_abiertos[0] != undefined) {
+            for (let cada_id of mensajes_abiertos) {
+                if (cada_id == message.from.id)
+                    throw new Error('Solo una entrada a la vez');
+                mensajes_abiertos.push(message.from.id);
+            }
+        }
         if (message.from.id != message.chat.id)
             throw new Error('Solo se puede fichar desde el chat privado');
         let empleado = await mongo.f_confirma_telegram_id(message.from.id);
@@ -22,7 +38,7 @@ let f_procesa_entrada = async message => {
                 empleado.alias
             }, ¿quieres fichar tu entrada a las ${moment
                 .unix(message.date)
-                .format('HH:mm')}?`
+                .format('H:mm')}?`
         );
         if (!res_confirma)
             throw new Error('Su ubicacion NO es correcta, no puede fichar');
@@ -52,8 +68,8 @@ let f_procesa_entrada = async message => {
 
 let notifica_usuario = async (chat_id, entrada, empleado) => {
     let fecha = moment(entrada.entrada).format('DD-MM-YYYY');
-    let hora = moment(entrada.entrada).format('HH:mm');
-    let text = `${empleado} ha fichado su entrada\na las ${hora}\nel dia ${fecha}`;
+    let hora = moment(entrada.entrada).format('H:mm');
+    let text = `*${empleado}* ha fichado su entrada\na las *${hora}*\nel día _${fecha}_`;
     enviar.f_manda_mensaje(chat_id, text);
 };
 

@@ -15,11 +15,11 @@ let f_procesa_salida = async message => {
             throw new Error('No tienes fichada una entrada, ficha la entrada.');
         let res_confirma = await confirmar.f_confirmacion(
             message,
-            `Hola ${
+            `Hola *${
                 empleado.alias
-            }, ¿quieres fichar tu salida a las ${moment
+            }*, ¿quieres fichar tu salida a las *${moment
                 .unix(message.date)
-                .format('HH:mm')}?`
+                .format('H:mm')}*?`
         );
         if (res_confirma) {
             //registrar en la DB
@@ -78,11 +78,11 @@ let f_procesa_salida = async message => {
 
 let notifica_usuario = async (chat_id, entrada, empleado, location) => {
     let fecha = moment(entrada.res.salida).format('DD-MM-YYYY');
-    let hora = moment(entrada.res.salida).format('HH:mm:ss');
+    let hora = moment(entrada.res.salida).format('H:mm');
     let duracion = entrada.jornada;
     let horas = duracion.hours();
     let minutos = duracion.minutes();
-    let text = `${empleado} ha fichado su salida\na las ${hora}\nel dia ${fecha}\nsu jornada ha durado\n${horas} horas ${minutos} minutos${location}`;
+    let text = `*${empleado}* ha fichado su salida\na las *${hora}*\nel día _${fecha}_\nsu jornada ha durado\n${horas} horas ${minutos} minutos${location}`;
     enviar.f_manda_mensaje(chat_id, text);
 };
 
