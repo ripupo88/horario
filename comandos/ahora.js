@@ -28,15 +28,14 @@ let f_procesa_ahora = async message => {
             let turno_activo = '';
             for (let cada_empleado of empleados) {
                 let turno = await mongo.confirma_entrada(cada_empleado);
-                if (turno[0] == undefined) {
-                    turno_activo = 'No hay empleados activos';
-                } else {
+                if (turno[0] != undefined) {
                     let dato_empleado = await mongo.f_empleado_por_id(
                         turno[0].empleado
                     );
                     turno_activo += dato_empleado.alias + '\n';
                 }
             }
+            if (turno_activo == '') turno_activo = 'No hay empleados activos';
             enviar.f_manda_mensaje(
                 message.from.id,
                 `Empresa:\n${empresa.nombre}\nEmpleados activos:\n${turno_activo}`
