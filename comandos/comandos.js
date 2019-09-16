@@ -3,6 +3,7 @@ const entrada = require('./entrada');
 const salida = require('./salida');
 const informes = require('./informes');
 const empresa = require('./empresa');
+const ahora = require('./ahora');
 
 let f_procesa_comando = message => {
     let re = /^\/[a-z]*/gi;
@@ -27,6 +28,10 @@ let f_procesa_comando = message => {
 
         case '/empresa':
             empresa.f_procesa_empresa(message);
+            break;
+
+        case '/ahora':
+            ahora.f_procesa_ahora(message);
             break;
 
         default:

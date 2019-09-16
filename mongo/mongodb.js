@@ -1,7 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
 const moment = require('moment');
-const enviar = require('../telegram/enviar');
 
 mongoose.connect(
     'mongodb://127.0.0.1/horariodb',
@@ -219,14 +218,12 @@ let f_fin_jornada = () => {
     });
 };
 
-let f_avisa_empleado = empleado_id => {
-    Usuario.findById(empleado_id, (err, res) => {
-        if (err) console.log(err);
-        console.log('la respu', res);
-        enviar.f_manda_mensaje(
-            res.telegram_id,
-            `${res.alias} tienes un turno abierto, no olvides fichar la salida`
-        );
+let f_empleado_por_id = empleado_id => {
+    return new Promise((resolve, reject) => {
+        Usuario.findById(empleado_id, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
     });
 };
 
@@ -303,7 +300,7 @@ module.exports = {
     f_obten_informe,
     f_busca_duplicado,
     f_fin_jornada,
-    f_avisa_empleado,
+    f_empleado_por_id,
     f_crea_empresa,
     f_obten_empresa,
     f_empresa,
