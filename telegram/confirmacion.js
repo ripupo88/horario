@@ -1,6 +1,7 @@
 const telegram = require('telegram-bot-api');
 const telegram_config = require('../privado/telegram.config');
 const events = require('events');
+const geolib = require('geolib');
 
 // Create an eventEmitter object
 let eventEmitter = new events.EventEmitter();
@@ -28,16 +29,16 @@ let escucha_eventos = message => {
     eventEmitter.emit('respu', { confirmacion, message });
 };
 
-let f_comprueba_ubicacion = (longitud, latitud) => {
-    if (
-        longitud <= 28.488742 &&
-        longitud >= 28.486121 &&
-        latitud >= -16.386131 &&
-        latitud <= -16.380079
-    ) {
+let f_comprueba_ubicacion = (longitude, latitude) => {
+    let distancia = geolib.getDistance(
+        { latitude, longitude },
+        { latitude: -16.3832116, longitude: 28.4873451 }
+    );
+    console.log(distancia);
+    if (distancia < 350) {
         return 'si';
     } else {
-        return 'location';
+        return distancia;
     }
 };
 
@@ -88,7 +89,7 @@ let f_confirmacion = (message, text) => {
                     console.log('confirmacion y borrando ', mensaje_id);
                     borra_mensaje(message.chat.id, mensaje_id);
                     return resolve(true);
-                } else if (confirm.confirmacion == 'location') {
+                } else if (confirm.confirmacion > 300) {
                     console.log('Error de ubicacion', mensaje_id);
                     borra_mensaje(message.chat.id, mensaje_id);
                     return resolve(false);
