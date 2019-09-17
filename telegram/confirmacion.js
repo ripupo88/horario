@@ -30,10 +30,10 @@ let escucha_eventos = message => {
 
 let f_comprueba_ubicacion = (longitud, latitud) => {
     if (
-        longitud <= 28.4879 &&
-        longitud >= 28.4868 &&
-        latitud >= -16.3838 &&
-        latitud <= -16.3823
+        longitud <= 28.488742 &&
+        longitud >= 28.486121 &&
+        latitud >= -16.386131 &&
+        latitud <= -16.380079
     ) {
         return 'si';
     } else {
