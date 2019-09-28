@@ -23,7 +23,7 @@ new CronJob(
                 let empleado = await mongo.f_empleado_por_id(registro.empleado);
                 enviar.f_manda_mensaje(
                     empleado.telegram_id,
-                    `${empleado.alias} tienes un turno abierto, no olvides fichar la salida`
+                    `${empleado.alias} no olvides fichar cuando termine tú jornada laboral.`
                 );
             });
         } catch (e) {
