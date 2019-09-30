@@ -15,7 +15,7 @@ let escucha_eventos = message => {
         chat_id: message.chat.id,
         message_id: message.message_id
     });
-    console.log('evento 3', message);
+
     var confirmacion;
     if (message.location != undefined) {
         confirmacion = f_comprueba_ubicacion(
@@ -25,7 +25,6 @@ let escucha_eventos = message => {
     } else {
         confirmacion = 'no';
     }
-
     eventEmitter.emit('respu', { confirmacion, message });
 };
 
@@ -62,7 +61,6 @@ let f_confirmacion = (message, text) => {
     return new Promise((resolve, reject) => {
         var mensaje_id;
         let borrado = false;
-        console.log('inicio promesa');
         api.sendMessage(
             {
                 chat_id: message.chat.id,
@@ -71,15 +69,11 @@ let f_confirmacion = (message, text) => {
                 reply_markup: JSON.stringify(KeyBoard)
             },
             (err, res) => {
-                console.log('enviando mensaje');
                 if (err) console.log(err);
-
                 mensaje_id = res.message_id;
             }
         );
-
         var terminado = false;
-
         eventEmitter.on('respu', confirm => {
             if (confirm.message.from.id === message.chat.id) {
                 console.log('salta evento');
@@ -104,11 +98,9 @@ let f_confirmacion = (message, text) => {
         let time_fuera = setTimeout(() => {
             console.log('se ejecuta el timeout');
             if (!terminado) {
-                console.log('tiempo y borrando ', mensaje_id);
                 borra_mensaje(message.chat.id, mensaje_id);
                 return reject('tiempo limite excedido');
             }
-            console.log(mensaje_id);
             mensaje_id = null;
         }, 13000);
 

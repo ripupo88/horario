@@ -108,7 +108,10 @@ let notifica_usuario = async (chat_id, entrada, empleado, location) => {
     let fecha = moment(entrada.res.salida).format('DD-MM-YYYY');
     let hora = moment(entrada.res.salida).format('H:mm');
     let duracion = entrada.jornada;
-    let horas = duracion.hours();
+    let horas =
+        Math.floor(new moment.duration(entrada.res.jornada).asHours()) +
+        ':' +
+        new moment(entrada.res.jornada).format('mm');
     let minutos = duracion.minutes();
     let text = `*${empleado}* ha fichado su salida\na las *${hora}*\nel día _${fecha}_\nsu jornada ha durado\n${horas} horas ${minutos} minutos${location}`;
     enviar.f_manda_mensaje(chat_id, text);
