@@ -34,7 +34,7 @@ let f_comprueba_ubicacion = (longitude, latitude) => {
         { latitude: -16.3832116, longitude: 28.4873451 }
     );
     console.log(distancia);
-    if (distancia < 350) {
+    if (distancia < 3000) {
         return 'si';
     } else {
         return distancia;
