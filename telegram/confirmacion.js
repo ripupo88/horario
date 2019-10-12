@@ -34,7 +34,7 @@ let f_comprueba_ubicacion = (longitude, latitude) => {
         { latitude: -16.3832116, longitude: 28.4873451 }
     );
     console.log(distancia);
-    if (distancia < 1) {
+    if (distancia < 2000) {
         return 'si';
     } else {
         return distancia;
@@ -83,7 +83,7 @@ let f_confirmacion = (message, text) => {
                     console.log('confirmacion y borrando ', mensaje_id);
                     borra_mensaje(message.chat.id, mensaje_id);
                     return resolve(true);
-                } else if (confirm.confirmacion > 1) {
+                } else if (confirm.confirmacion > 2000) {
                     console.log('Error de ubicacion', mensaje_id);
                     borra_mensaje(message.chat.id, mensaje_id);
                     return resolve(false);
