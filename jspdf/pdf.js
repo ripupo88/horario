@@ -56,14 +56,14 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                         ':' +
                         new moment(element.jornada).format('mm');
                     if (element.validado.entrada == false) {
-                        entra_validado = '*NO*';
+                        entra_validado = '*no*';
                     } else {
-                        entra_validado = 'SI';
+                        entra_validado = 'si';
                     }
                     if (element.validado.salida == false) {
-                        sale_validado = '*NO*';
+                        sale_validado = '*no*';
                     } else {
-                        sale_validado = 'SI';
+                        sale_validado = 'si';
                     }
                 }
 
@@ -83,7 +83,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
 
     //tabla principal con los datos del trabajador
     doc.autoTable({
-        margin: { top: 20 },
+        margin: { top: 19 },
         tableLineWidth: 0.1,
         tableLineColor: 0,
         styles: {
