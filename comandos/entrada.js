@@ -1,6 +1,7 @@
 const mongo = require('../mongo/mongodb');
 const enviar = require('../telegram/enviar');
 const confirmar = require('../telegram/confirmacion');
+const adm_confirma = require('../telegram/confirma_entrada');
 const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
@@ -68,21 +69,31 @@ let f_procesa_entrada = async message => {
             empleado.id,
             gps
         );
-
+        console.log('sssssssssssssssss', entrada_fichada.id);
         let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
-        await notifica_usuario(
-            admin_empresa.empresa.admin.telegram_id,
-            entrada_fichada,
-            empleado.alias,
-            ubica
-        );
-        await notifica_usuario(
+        let mi_text = await notifica_usuario(
             message.chat.id,
             entrada_fichada,
             empleado.alias,
             ubica
         );
+
+        if (intentos == 2) {
+            adm_confirma.f_confirmacion(
+                message,
+                mi_text,
+                admin_empresa.empresa.admin.telegram_id,
+                entrada_fichada.id
+            );
+        } else {
+            await notifica_usuario(
+                admin_empresa.empresa.admin.telegram_id,
+                entrada_fichada,
+                empleado.alias,
+                ubica
+            );
+        }
     } catch (err) {
         let indice3 = 0;
         for (let cada_id of mensajes_abiertos) {
@@ -102,6 +113,7 @@ let notifica_usuario = async (chat_id, entrada, empleado, ubica) => {
     let hora = moment(entrada.entrada).format('H:mm');
     let text = `*${empleado}* ha fichado su entrada\na las *${hora}*\nel día _${fecha}_.\n${ubica}`;
     enviar.f_manda_mensaje(chat_id, text);
+    return text;
 };
 
 module.exports = { f_procesa_entrada };

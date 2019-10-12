@@ -42,7 +42,6 @@ let f_procesa_salida = async message => {
             indice2++;
         }
         if (res_confirma) {
-            //registrar en la DB
             let salida_fichada = await mongo.f_nueva_salida(
                 moment.unix(message.date).toISOString(),
                 empleado.id,
@@ -56,7 +55,7 @@ let f_procesa_salida = async message => {
                 empleado.alias,
                 '\nubicación confirmada'
             );
-            //notifica usuario
+
             await notifica_usuario(
                 message.chat.id,
                 salida_fichada,
@@ -65,13 +64,11 @@ let f_procesa_salida = async message => {
             );
             //notifica jefes
         } else {
-            //registrar en la DB
             let salida_fichada = await mongo.f_nueva_salida(
                 moment.unix(message.date).toISOString(),
                 empleado.id,
                 res_confirma
             );
-            //notifica usuario
             let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
             await notifica_usuario(
