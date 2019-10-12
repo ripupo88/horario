@@ -78,7 +78,12 @@ let f_nueva_salida = (salida, empleado, validado) => {
             .then(duration => {
                 Registro.findOneAndUpdate(
                     { empleado: empleado, fin: false },
-                    { salida, fin: true, jornada: duration, validado },
+                    {
+                        salida,
+                        fin: true,
+                        jornada: duration,
+                        'validado.salida': validado
+                    },
                     (err, res) => {
                         if (err) console.log(err);
                         resolve({

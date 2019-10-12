@@ -40,7 +40,8 @@ let f_crea_pdf = async (registro, empleado, destino) => {
         let hora_entrada = '';
         let hora_salida = '';
         let duracion = '';
-        let validado = '';
+        let entra_validado = '';
+        let sale_validado = '';
 
         registro.forEach(element => {
             let fecha_hoy = new moment(element.entrada).format('D');
@@ -54,10 +55,15 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                         ) +
                         ':' +
                         new moment(element.jornada).format('mm');
-                    if (element.validado) {
-                        validado = 'si';
+                    if (element.validado.entrada == false) {
+                        entra_validado = '*NO*';
                     } else {
-                        validado = '***NO***';
+                        entra_validado = 'SI';
+                    }
+                    if (element.validado.salida == false) {
+                        sale_validado = '*NO*';
+                    } else {
+                        sale_validado = 'SI';
                     }
                 }
 
@@ -68,9 +74,10 @@ let f_crea_pdf = async (registro, empleado, destino) => {
         body_principal[i] = [
             i + 1,
             hora_entrada,
+            entra_validado,
             hora_salida,
-            duracion,
-            validado
+            sale_validado,
+            duracion
         ];
     }
 
@@ -83,7 +90,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
             fontSize: 8,
             cellWidth: 'wrap'
         },
-        head: [['Día', 'Entrada', 'Salida', 'Jornada', 'Validado']],
+        head: [['Día', 'Entrada', 'Validada', 'Salida', 'Validada', 'Jornada']],
         body: body_principal
     });
 
