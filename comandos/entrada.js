@@ -5,6 +5,7 @@ const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
     try {
+        let intentos = 0;
         let indice = 0;
         if (mensajes_abiertos[0] != undefined) {
             for (let cada_id of mensajes_abiertos) {
@@ -28,15 +29,29 @@ let f_procesa_entrada = async message => {
             throw new Error('Ya tienes un turno abierto.');
         let duplicado = await mongo.f_busca_duplicado(empleado);
         if (duplicado[0] != undefined) throw new Error('Hoy ya has fichado.');
+        var res_conf_glo;
+        var hola = 'Hola';
+        var ubica = 'Ubicación confirmada.';
+        do {
+            if (intentos == 1) {
+                hola = 'Error de ubicacion, Nuevo intento:\n';
+            } else if (intentos == 2) {
+                ubica =
+                    'Ubicación no confirmada, notificando administrador para validación manual.';
+                break;
+            }
+            let res_confirma = await confirmar.f_confirmacion(
+                message,
+                `${hola} ${
+                    empleado.alias
+                }, ¿quieres fichar tu entrada a las ${moment
+                    .unix(message.date)
+                    .format('H:mm')}?`
+            );
+            intentos++;
+            res_conf_glo = res_confirma;
+        } while (!res_conf_glo);
 
-        let res_confirma = await confirmar.f_confirmacion(
-            message,
-            `Hola ${
-                empleado.alias
-            }, ¿quieres fichar tu entrada a las ${moment
-                .unix(message.date)
-                .format('H:mm')}?`
-        );
         let indice2 = 0;
         for (let cada_id of mensajes_abiertos) {
             if (cada_id == message.from.id) {
@@ -45,8 +60,6 @@ let f_procesa_entrada = async message => {
             }
             indice2++;
         }
-        if (!res_confirma)
-            throw new Error('Su ubicacion NO es correcta, no puede fichar');
 
         let entrada_fichada = await mongo.f_nueva_entrada(
             moment.unix(message.date).toISOString(),
@@ -58,12 +71,14 @@ let f_procesa_entrada = async message => {
         await notifica_usuario(
             admin_empresa.empresa.admin.telegram_id,
             entrada_fichada,
-            empleado.alias
+            empleado.alias,
+            ubica
         );
         await notifica_usuario(
             message.chat.id,
             entrada_fichada,
-            empleado.alias
+            empleado.alias,
+            ubica
         );
     } catch (err) {
         let indice3 = 0;
@@ -79,10 +94,10 @@ let f_procesa_entrada = async message => {
     }
 };
 
-let notifica_usuario = async (chat_id, entrada, empleado) => {
+let notifica_usuario = async (chat_id, entrada, empleado, ubica) => {
     let fecha = moment(entrada.entrada).format('DD-MM-YYYY');
     let hora = moment(entrada.entrada).format('H:mm');
-    let text = `*${empleado}* ha fichado su entrada\na las *${hora}*\nel día _${fecha}_`;
+    let text = `*${empleado}* ha fichado su entrada\na las *${hora}*\nel día _${fecha}_.\n${ubica}`;
     enviar.f_manda_mensaje(chat_id, text);
 };
 

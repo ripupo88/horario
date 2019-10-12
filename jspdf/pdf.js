@@ -95,11 +95,11 @@ let f_crea_pdf = async (registro, empleado, destino) => {
             [
                 {
                     content: 'EMPRESA:',
-                    styles: { minCellHeight: 10, valign: 'bottom' }
+                    styles: { minCellHeight: 8, valign: 'bottom' }
                 },
                 {
                     content: 'CIF:',
-                    styles: { minCellHeight: 10, valign: 'bottom' }
+                    styles: { minCellHeight: 8, valign: 'bottom' }
                 },
                 '',
                 ''
@@ -116,11 +116,11 @@ let f_crea_pdf = async (registro, empleado, destino) => {
             [
                 {
                     content: 'EMPLEADO:',
-                    styles: { minCellHeight: 10, valign: 'bottom' }
+                    styles: { minCellHeight: 8, valign: 'bottom' }
                 },
                 {
                     content: 'NIF/NIE:',
-                    styles: { minCellHeight: 10, valign: 'bottom' }
+                    styles: { minCellHeight: 8, valign: 'bottom' }
                 },
                 '',
                 ''
@@ -133,6 +133,18 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                     content: '_______________',
                     styles: { halign: 'center', valign: 'bottom' }
                 }
+            ],
+            [
+                {
+                    content: 'CONTRATO:',
+                    styles: { minCellHeight: 8, valign: 'bottom' }
+                },
+                {
+                    content: 'Jornada Completa',
+                    styles: { minCellHeight: 8, valign: 'bottom' }
+                },
+                '',
+                ''
             ]
         ]
     });
