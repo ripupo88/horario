@@ -6,6 +6,7 @@ let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
     try {
         let intentos = 0;
+        var gps = true;
         let indice = 0;
         if (mensajes_abiertos[0] != undefined) {
             for (let cada_id of mensajes_abiertos) {
@@ -36,6 +37,7 @@ let f_procesa_entrada = async message => {
             if (intentos == 1) {
                 hola = 'Error de ubicacion, Nuevo intento:\n';
             } else if (intentos == 2) {
+                gps = false;
                 ubica =
                     'Ubicación no confirmada, notificando administrador para validación manual.';
                 break;
@@ -63,7 +65,8 @@ let f_procesa_entrada = async message => {
 
         let entrada_fichada = await mongo.f_nueva_entrada(
             moment.unix(message.date).toISOString(),
-            empleado.id
+            empleado.id,
+            gps
         );
 
         let admin_empresa = await mongo.f_obten_admin(empleado.id);

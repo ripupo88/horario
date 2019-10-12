@@ -57,11 +57,12 @@ let confirma_entrada = empleado => {
     });
 };
 
-let f_nueva_entrada = (entrada, empleado) => {
+let f_nueva_entrada = (entrada, empleado, gps) => {
     return new Promise((resolve, reject) => {
         let registro = new Registro({
             entrada,
-            empleado
+            empleado,
+            validado: { entrada: gps }
         });
 
         registro.save((err, res) => {

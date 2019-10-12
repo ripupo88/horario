@@ -12,8 +12,14 @@ const registro_schema = new mongoose.Schema({
     salida: Date,
     jornada: Number,
     validado: {
-        type: Boolean,
-        default: false
+        entrada: {
+            type: Boolean,
+            default: false
+        },
+        salida: {
+            type: Boolean,
+            default: false
+        }
     },
     empleado: {
         type: Schema.ObjectId,
