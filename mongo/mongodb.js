@@ -296,6 +296,26 @@ let f_obten_admin = id_admin => {
     });
 };
 
+let f_validador = (id, es) => {
+    return new Promise((resolve, reject) => {
+        let mofificador;
+        if (es == 'entrada') {
+            mofificador = {
+                'validado.entrada': true
+            };
+        } else {
+            mofificador = {
+                'validado.salida': true
+            };
+        }
+        Registro.findByIdAndUpdate(id, mofificador, (err, res) => {
+            if (err) console.log(err);
+            console.log(res);
+            resolve();
+        });
+    });
+};
+
 module.exports = {
     f_confirma_telegram_id,
     f_nuevo_usuario,
@@ -311,5 +331,6 @@ module.exports = {
     f_obten_empresa,
     f_empresa,
     f_obten_admin,
-    f_obten_empresa_admin
+    f_obten_empresa_admin,
+    f_validador
 };

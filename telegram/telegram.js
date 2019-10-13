@@ -1,6 +1,7 @@
 const telegram = require('telegram-bot-api');
 const telegram_config = require('../privado/telegram.config');
 const events = require('events');
+const mongo = require('../mongo/mongodb');
 
 // Create an eventEmitter object
 let eventEmitter = new events.EventEmitter();
@@ -26,9 +27,23 @@ api.on('inline.callback.query', function(message) {
             text: 'prosesando'
         },
         (err, res) => {
+            let KeyBoard = {
+                inline_keyboard: [[]]
+            };
             if (err) console.log('error', err);
+            let re = /entrada/gi;
+            let result = re.exec(message.message.text);
+            if (result != null) {
+                mongo.f_validador(message.data, 'entrada');
+            } else if (message.data != 'no') {
+                mongo.f_validador(message.data, 'salida');
+            }
 
-            console.log('res', res, message);
+            api.editMessageReplyMarkup({
+                chat_id: message.message.chat.id,
+                message_id: message.message.message_id,
+                reply_markup: JSON.stringify(KeyBoard)
+            });
         }
     );
 });

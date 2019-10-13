@@ -1,6 +1,7 @@
 const mongo = require('../mongo/mongodb');
 const enviar = require('../telegram/enviar');
 const confirmar = require('../telegram/confirmacion');
+const adm_confirma = require('../telegram/confirma_entrada');
 const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_salida = async message => {
@@ -71,18 +72,18 @@ let f_procesa_salida = async message => {
             );
             let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
-            await notifica_usuario(
-                admin_empresa.empresa.admin.telegram_id,
+            let mi_text = await notifica_usuario(
+                message.chat.id,
                 salida_fichada,
                 empleado.alias,
                 '\nfuera de ubicación, esto marcará un incidente en su registro'
             );
 
-            await notifica_usuario(
-                message.chat.id,
-                salida_fichada,
-                empleado.alias,
-                '\nfuera de ubicación, esto marcará un incidente en su registro'
+            adm_confirma.f_confirmacion(
+                message,
+                mi_text,
+                admin_empresa.empresa.admin.telegram_id,
+                salida_fichada.res.id
             );
         }
     } catch (err) {
@@ -112,6 +113,7 @@ let notifica_usuario = async (chat_id, entrada, empleado, location) => {
     let minutos = duracion.minutes();
     let text = `*${empleado}* ha fichado su salida\na las *${hora}*\nel día _${fecha}_\nsu jornada ha durado\n${horas} horas ${minutos} minutos${location}`;
     enviar.f_manda_mensaje(chat_id, text);
+    return text;
 };
 
 module.exports = { f_procesa_salida };

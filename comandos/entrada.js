@@ -69,7 +69,7 @@ let f_procesa_entrada = async message => {
             empleado.id,
             gps
         );
-        console.log('sssssssssssssssss', entrada_fichada.id);
+
         let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
         let mi_text = await notifica_usuario(
