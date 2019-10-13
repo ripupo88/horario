@@ -309,9 +309,9 @@ let f_validador = (id, es) => {
             };
         }
         Registro.findByIdAndUpdate(id, mofificador, (err, res) => {
-            if (err) console.log(err);
+            if (err) reject(err);
             console.log(res);
-            resolve();
+            resolve(res);
         });
     });
 };
