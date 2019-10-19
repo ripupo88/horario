@@ -316,6 +316,15 @@ let f_validador = (id, es) => {
     });
 };
 
+let f_user = user => {
+    return new Promise((resolve, reject) => {
+        Usuario.find({ correo: user }, (err, res) => {
+            if (err) reject(err);
+            resolve(res[0]);
+        });
+    });
+};
+
 module.exports = {
     f_confirma_telegram_id,
     f_nuevo_usuario,
@@ -332,5 +341,6 @@ module.exports = {
     f_empresa,
     f_obten_admin,
     f_obten_empresa_admin,
-    f_validador
+    f_validador,
+    f_user
 };
