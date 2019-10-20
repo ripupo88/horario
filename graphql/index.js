@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 const { f_user } = require('../mongo/mongodb');
+const { f_procesa_ahora } = require('../comandos/ahora');
 
 const getUser = token => {
     try {
@@ -23,10 +24,10 @@ const server = new ApolloServer({
         const tokenWithBearer = req.headers.authorization || '';
         const token = tokenWithBearer.split(' ')[1];
         const user = getUser(token);
-
         return {
             user,
-            f_user
+            f_user,
+            f_procesa_ahora
         };
     }
 });

@@ -3,6 +3,7 @@ const enviar = require('../telegram/enviar');
 const moment = require('moment');
 
 let f_procesa_ahora = async message => {
+    console.log(message.from);
     try {
         if (message.from.id != message.chat.id)
             throw new Error('Comando solo disponible en privado');

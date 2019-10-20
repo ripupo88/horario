@@ -4,15 +4,18 @@ const jwt = require('jsonwebtoken');
 const resolvers = {
     Query: {
         hello: () => 'Hello World',
-        currentUser: (parent, args, { user, cuarto }) => {
+        activeUsers: async (parent, args, ctx) => {
+            if (!ctx.user) throw new Error('Not Authenticated');
+            let myUser = await ctx.f_user(ctx.user.username);
+            let id = myUser.telegram_id;
+            ctx.f_procesa_ahora({ from: { id }, chat: { id } });
+        },
+        currentUser: (parent, args, { user, f_user }) => {
             // this if statement is our authentication check
             if (!user) {
                 throw new Error('Not Authenticated');
             }
-            return cuarto({
-                username: 'Richar',
-                password: '1234'
-            });
+            return f_user(user.username);
         }
     },
     Mutation: {
@@ -27,7 +30,7 @@ const resolvers = {
 
         login: async (parent, { username, password }, ctx, info) => {
             const hashedPassword = await bcrypt.hash(password, 10);
-
+            console.log(hashedPassword);
             const user = await ctx.f_user(username);
 
             if (!user) {
@@ -43,14 +46,14 @@ const resolvers = {
             const token = jwt.sign(
                 {
                     id: user.id,
-                    username: user.correo
+                    username: user.username
                 },
                 'solo_yo',
                 {
                     expiresIn: '30d' // token will expire in 30days
                 }
             );
-            console.log(user);
+
             return {
                 token,
                 user

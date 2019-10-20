@@ -9,6 +9,13 @@ const typeDefs = gql`
     type Query {
         hello: String!
         currentUser: User!
+        activeUsers: [ActiveUser]
+    }
+
+    type ActiveUser {
+        alias: String!
+        entrada: String!
+        empresa: String!
     }
 
     type Mutation {
