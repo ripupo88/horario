@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
-const { f_user } = require('../mongo/mongodb');
+const { f_user, f_empleado_por_id } = require('../mongo/mongodb');
 const { f_procesa_ahora } = require('../comandos/ahora');
 
 const getUser = token => {
@@ -27,6 +27,7 @@ const server = new ApolloServer({
         return {
             user,
             f_user,
+            f_empleado_por_id,
             f_procesa_ahora
         };
     }

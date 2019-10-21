@@ -31,7 +31,7 @@ let f_procesa_comando = message => {
             break;
 
         case '/ahora':
-            ahora.f_procesa_ahora(message);
+            ahora.f_procesa_ahora({ message, web: false });
             break;
 
         default:

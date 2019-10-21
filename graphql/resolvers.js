@@ -4,12 +4,20 @@ const jwt = require('jsonwebtoken');
 const resolvers = {
     Query: {
         hello: () => 'Hello World',
+
         activeUsers: async (parent, args, ctx) => {
             if (!ctx.user) throw new Error('Not Authenticated');
-            let myUser = await ctx.f_user(ctx.user.username);
+            let myUser = await ctx.f_empleado_por_id(ctx.user.id);
             let id = myUser.telegram_id;
-            ctx.f_procesa_ahora({ from: { id }, chat: { id } });
+            let message = { from: { id }, chat: { id } };
+            let res = await ctx.f_procesa_ahora({
+                message,
+                web: true
+            });
+            console.log(res);
+            return res.activosParaWeb;
         },
+
         currentUser: (parent, args, { user, f_user }) => {
             // this if statement is our authentication check
             if (!user) {
