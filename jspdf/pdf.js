@@ -38,15 +38,18 @@ let f_crea_pdf = async (registro, empleado, destino) => {
     //creando el body
     for (let i = 0; i < dias; i++) {
         let hora_entrada = '';
+        let dia_semana;
         let hora_salida = '';
         let duracion = '';
         let entra_validado = '';
         let sale_validado = '';
 
         registro.forEach(element => {
-            let fecha_hoy = new moment(element.entrada).format('D');
+            let now_time = new moment(element.entrada);
+            let fecha_hoy = now_time.format('D');
+            dia_semana = mes.date(i + 1).format('dddd');
             if (fecha_hoy == i + 1) {
-                hora_entrada = new moment(element.entrada).format('HH:mm');
+                hora_entrada = now_time.format('HH:mm');
                 if (element.salida != undefined) {
                     hora_salida = new moment(element.salida).format('HH:mm');
                     duracion =
@@ -72,7 +75,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
         });
 
         body_principal[i] = [
-            i + 1,
+            i + 1 + '   ' + dia_semana,
             hora_entrada,
             entra_validado,
             hora_salida,
@@ -87,7 +90,8 @@ let f_crea_pdf = async (registro, empleado, destino) => {
         tableLineWidth: 0.1,
         tableLineColor: 0,
         styles: {
-            fontSize: 8,
+            cellPadding: 1,
+            fontSize: 12,
             cellWidth: 'wrap'
         },
         head: [['Día', 'Entrada', 'Validada', 'Salida', 'Validada', 'Jornada']],
@@ -96,6 +100,11 @@ let f_crea_pdf = async (registro, empleado, destino) => {
 
     //pie de pagina con datos de la empresa y el empleado
     doc.autoTable({
+        styles: {
+            cellPadding: 1,
+            fontSize: 11,
+            cellWidth: 'wrap'
+        },
         theme: 'plain',
         head: [],
         body: [
