@@ -51,8 +51,10 @@ let f_procesa_entrada = async message => {
                     .unix(message.date)
                     .format('H:mm')}?`
             );
-            intentos++;
             res_conf_glo = res_confirma;
+            if (!res_conf_glo) {
+                intentos++;
+            }
         } while (!res_conf_glo);
 
         let indice2 = 0;

@@ -49,20 +49,41 @@ let f_procesa_salida = async message => {
                 res_confirma
             );
             let admin_empresa = await mongo.f_obten_admin(empleado.id);
-
-            await notifica_usuario(
-                admin_empresa.empresa.admin.telegram_id,
-                salida_fichada,
-                empleado.alias,
-                '\nubicación confirmada'
+            let horas = Math.floor(
+                new moment.duration(
+                    salida_fichada.jornada._milliseconds
+                ).asHours()
             );
 
-            await notifica_usuario(
-                message.chat.id,
-                salida_fichada,
-                empleado.alias,
-                '\nubicación confirmada'
-            );
+            if (horas < 9) {
+                await notifica_usuario(
+                    admin_empresa.empresa.admin.telegram_id,
+                    salida_fichada,
+                    empleado.alias,
+                    '\nubicación confirmada'
+                );
+
+                await notifica_usuario(
+                    message.chat.id,
+                    salida_fichada,
+                    empleado.alias,
+                    '\nubicación confirmada'
+                );
+            } else {
+                let mi_text = await notifica_usuario(
+                    message.chat.id,
+                    salida_fichada,
+                    empleado.alias,
+                    '\nsu jornada a durado más de lo normal, requiere validacion del administrador.'
+                );
+
+                adm_confirma.f_confirmacion(
+                    message,
+                    mi_text,
+                    admin_empresa.empresa.admin.telegram_id,
+                    salida_fichada.res.id
+                );
+            }
             //notifica jefes
         } else {
             let salida_fichada = await mongo.f_nueva_salida(

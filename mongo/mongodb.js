@@ -76,6 +76,10 @@ let f_nueva_salida = (salida, empleado, validado) => {
     return new Promise((resolve, reject) => {
         f_encuentra_entrada(empleado, salida)
             .then(duration => {
+                let horas = Math.floor(new moment.duration(duration).asHours());
+                if (horas >= 9) {
+                    validado = false;
+                }
                 Registro.findOneAndUpdate(
                     { empleado: empleado, fin: false },
                     {

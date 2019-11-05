@@ -52,19 +52,23 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                 hora_entrada = now_time.format('HH:mm');
                 if (element.salida != undefined) {
                     hora_salida = new moment(element.salida).format('HH:mm');
-                    duracion =
-                        Math.floor(
-                            new moment.duration(element.jornada).asHours()
-                        ) +
-                        ':' +
-                        new moment(element.jornada).format('mm');
+                    if (element.validado.entrada && element.validado.salida) {
+                        duracion =
+                            Math.floor(
+                                new moment.duration(element.jornada).asHours()
+                            ) +
+                            ':' +
+                            new moment(element.jornada).format('mm');
+                    } else {
+                        duracion = '(            )';
+                    }
                     if (element.validado.entrada == false) {
-                        entra_validado = '*no*';
+                        entra_validado = 'no (              )';
                     } else {
                         entra_validado = 'si';
                     }
                     if (element.validado.salida == false) {
-                        sale_validado = '*no*';
+                        sale_validado = 'no (              )';
                     } else {
                         sale_validado = 'si';
                     }
