@@ -35,7 +35,7 @@ const server = new ApolloServer({
 
 server
     .listen({
-        port: 8383
+        port: 80
     })
     .then(info =>
         console.log(`Server started on http://localhost:${info.port}`)
