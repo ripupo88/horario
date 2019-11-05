@@ -99,7 +99,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
             2: { cellWidth: 'auto' },
             3: { cellWidth: 'auto' },
             4: { cellWidth: 'auto' },
-            5: { cellWidth: 30, halign: 'right' }
+            5: { cellWidth: 30 }
         },
         styles: {
             cellPadding: 1,
