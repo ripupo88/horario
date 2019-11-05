@@ -60,7 +60,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                             ':' +
                             new moment(element.jornada).format('mm');
                     } else {
-                        duracion = '(          ) _____';
+                        duracion = '(          )__________';
                     }
                     if (element.validado.entrada == false) {
                         entra_validado = 'no (           )';
@@ -93,10 +93,18 @@ let f_crea_pdf = async (registro, empleado, destino) => {
         margin: { top: 19 },
         tableLineWidth: 0.1,
         tableLineColor: 0,
+        columnStyles: {
+            0: { cellWidth: 'auto' },
+            1: { cellWidth: 'auto' },
+            2: { cellWidth: 'auto' },
+            3: { cellWidth: 'auto' },
+            4: { cellWidth: 'auto' },
+            5: { cellWidth: 30, halign: 'right' }
+        },
         styles: {
             cellPadding: 1,
-            fontSize: 12,
-            cellWidth: 'wrap'
+            fontSize: 12
+            //cellWidth: 'auto'
         },
         head: [['Día', 'Entrada', 'Validada', 'Salida', 'Validada', 'Jornada']],
         body: body_principal

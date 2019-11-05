@@ -53,6 +53,7 @@ let f_procesa_ahora = async ({ message, web }) => {
                     `Empresa:\n${empresa.nombre}\nEmpleados activos:\n${turno_activo}`
                 );
             } else {
+                //en la web solo enviará una empresa porque sale del bukle
                 return { activosParaWeb };
             }
         }
