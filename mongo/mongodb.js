@@ -151,15 +151,12 @@ let f_confirma_telegram_id = telegram_id => {
 
 let f_obten_empleados = empresa => {
     return new Promise((resolve, reject) => {
-        Usuario.find(
-            { role: 'USER_ROLE', activo: true, empresa },
-            (err, res) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(res);
+        Usuario.find({ role: 'USER_ROLE', empresa }, (err, res) => {
+            if (err) {
+                reject(err);
             }
-        );
+            resolve(res);
+        });
     });
 };
 
@@ -205,10 +202,10 @@ let f_obten_informe = (empleado, mes) => {
     });
 };
 
-let f_fin_jornada = () => {
+let f_fin_jornada = horas => {
     return new Promise((resolve, reject) => {
         let jornada = new moment();
-        jornada = jornada.hour(jornada.hour() - 8);
+        jornada = jornada.hour(jornada.hour() - horas);
         console.log(jornada);
         Registro.find(
             {

@@ -18,12 +18,12 @@ new CronJob(
     '0 */5 * * * *',
     async () => {
         try {
-            let jornadas_abiertas = await mongo.f_fin_jornada();
+            let jornadas_abiertas = await mongo.f_fin_jornada(8);
             jornadas_abiertas.forEach(async registro => {
                 let empleado = await mongo.f_empleado_por_id(registro.empleado);
                 enviar.f_manda_mensaje(
                     empleado.telegram_id,
-                    `${empleado.alias} no olvides fichar cuando termine tú jornada laboral.`
+                    `${empleado.alias} no olvides fichar cuando termine tu jornada laboral.`
                 );
             });
         } catch (e) {

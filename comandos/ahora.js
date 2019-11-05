@@ -27,6 +27,7 @@ let f_procesa_ahora = async ({ message, web }) => {
             throw new Error('No has creado empresas aún');
         for (let empresa of empresas) {
             let empleados = await mongo.f_obten_empleados(empresa.id);
+            console.log('cada empresa', empresa);
             if (empleados[0] == undefined)
                 throw new Error('Tu empresa aún no tiene empleados');
             let turno_activo = '';
@@ -51,14 +52,17 @@ let f_procesa_ahora = async ({ message, web }) => {
                     message.from.id,
                     `Empresa:\n${empresa.nombre}\nEmpleados activos:\n${turno_activo}`
                 );
+            } else {
+                return { activosParaWeb };
             }
-            return { activosParaWeb };
         }
     } catch (err) {
         console.log(err);
         if (web != true) {
             enviar.f_manda_mensaje(message.chat.id, err.toString());
         }
+        let activosParaWeb = [];
+        return { activosParaWeb };
     }
 };
 

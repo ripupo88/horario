@@ -60,15 +60,15 @@ let f_crea_pdf = async (registro, empleado, destino) => {
                             ':' +
                             new moment(element.jornada).format('mm');
                     } else {
-                        duracion = '(            )';
+                        duracion = '(          ) _____';
                     }
                     if (element.validado.entrada == false) {
-                        entra_validado = 'no (              )';
+                        entra_validado = 'no (           )';
                     } else {
                         entra_validado = 'si';
                     }
                     if (element.validado.salida == false) {
-                        sale_validado = 'no (              )';
+                        sale_validado = 'no (           )';
                     } else {
                         sale_validado = 'si';
                     }

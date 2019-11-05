@@ -8,6 +8,7 @@ const resolvers = {
         activeUsers: async (parent, args, ctx) => {
             if (!ctx.user) throw new Error('Not Authenticated');
             let myUser = await ctx.f_empleado_por_id(ctx.user.id);
+            console.log('asdasdsadasd', myUser);
             let id = myUser.telegram_id;
             let message = { from: { id }, chat: { id } };
             let res = await ctx.f_procesa_ahora({
@@ -15,6 +16,7 @@ const resolvers = {
                 web: true
             });
             console.log(res);
+
             return res.activosParaWeb;
         },
 
