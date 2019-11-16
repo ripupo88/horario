@@ -26,7 +26,7 @@ api.on('inline.callback.query', function(message) {
     api.answerCallbackQuery(
         {
             callback_query_id: message.id,
-            text: 'prosesando'
+            text: 'procesando'
         },
         async (err, res) => {
             let KeyBoard = {
