@@ -29,6 +29,7 @@ app.post('/fichar', async (req, res) => {
    } else {
       entrada.doEntrada(message, empleado, true, 'fichado por QR', 0);
    }
+   res.json({ message: 'has fichado' });
 });
 
 let time = () => {
