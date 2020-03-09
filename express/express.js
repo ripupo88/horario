@@ -1,5 +1,6 @@
 const mongo = require('../mongo/mongodb');
 const entrada = require('../comandos/entrada');
+const salida = require('../comandos/salida');
 
 const express = require('express');
 const app = express();
@@ -24,7 +25,7 @@ app.post('/fichar', async (req, res) => {
    };
 
    if (registro[0] != undefined) {
-      //fichar salida
+      salida.doSalida(message, empleado, true);
    } else {
       entrada.doEntrada(message, empleado, true, 'fichado por QR');
    }
