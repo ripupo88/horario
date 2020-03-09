@@ -1,7 +1,7 @@
 require('./mongo/mongodb');
 require('./cron/cron');
 require('./jspdf/pdf');
-require('./graphql/index');
+//require('./graphql/index');
 require('./express/express');
 
 const telegram = require('./telegram/telegram');
