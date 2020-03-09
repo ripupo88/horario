@@ -4,6 +4,7 @@ const salida = require('./salida');
 const informes = require('./informes');
 const empresa = require('./empresa');
 const ahora = require('./ahora');
+const app = require('./app');
 
 let f_procesa_comando = message => {
    let re = /^\/[a-z]*/gi;
