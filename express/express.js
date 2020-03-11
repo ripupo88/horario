@@ -10,26 +10,31 @@ const port = 8080;
 app.use(bodyParser.json()); // for parsing application/json
 
 app.post('/fichar', async (req, res) => {
-   let telegram_id = req.body.telegram;
-   let empleado = await mongo.f_confirma_telegram_id(telegram_id);
-   let registro = await mongo.confirma_entrada(empleado);
+   try {
+      let telegram_id = req.body.telegram;
+      let empleado = await mongo.f_confirma_telegram_id(telegram_id);
+      let registro = await mongo.confirma_entrada(empleado);
 
-   let message = {
-      date: new Date(),
-      chat: {
-         id: telegram_id
-      },
-      from: {
-         id: telegram_id
+      let message = {
+         date: new Date(),
+         chat: {
+            id: telegram_id
+         },
+         from: {
+            id: telegram_id
+         }
+      };
+
+      if (registro[0] != undefined) {
+         salida.doSalida(message, empleado, true);
+      } else {
+         entrada.doEntrada(message, empleado, true, 'fichado por QR', 0);
       }
-   };
-
-   if (registro[0] != undefined) {
-      salida.doSalida(message, empleado, true);
-   } else {
-      entrada.doEntrada(message, empleado, true, 'fichado por QR', 0);
+      res.json({ message: 'has fichado' });
+   } catch (e) {
+      console.log(e);
+      res.json({ message: 'NOOO has fichado' });
    }
-   res.json({ message: 'has fichado' });
 });
 
 let time = () => {
