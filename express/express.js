@@ -3,14 +3,17 @@ const entrada = require('../comandos/entrada');
 const salida = require('../comandos/salida');
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 8080;
 
+app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 
 app.post('/fichar', async (req, res) => {
    try {
+      console.log('req.body', req.body);
       let telegram_id = req.body.telegram;
       let empleado = await mongo.f_confirma_telegram_id(telegram_id);
       let registro = await mongo.confirma_entrada(empleado);
