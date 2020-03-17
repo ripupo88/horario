@@ -41,11 +41,13 @@ let f_procesa_salida = async message => {
          indice2++;
       }
       if (res_confirma) {
+
          let salida_fichada = await mongo.f_nueva_salida(
             moment.unix(message.date).toISOString(),
             empleado.id,
             res_confirma
          );
+
          let admin_empresa = await mongo.f_obten_admin(empleado.id);
          let horas = Math.floor(
             new moment.duration(salida_fichada.jornada._milliseconds).asHours()
@@ -120,6 +122,7 @@ async function doSalida(message, empleado, res_confirma) {
       empleado.id,
       res_confirma
    );
+   
    let admin_empresa = await mongo.f_obten_admin(empleado.id);
    let mi_text = await notifica_usuario(
       message.chat.id,

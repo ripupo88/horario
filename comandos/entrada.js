@@ -92,6 +92,7 @@ let notifica_usuario = async (chat_id, entrada, empleado, ubica) => {
 async function doEntrada(message, empleado, gps, ubica, intentos) {
    let duplicado = await mongo.f_busca_duplicado(empleado);
    if (duplicado[0] != undefined) throw new Error('Hoy ya has fichado.');
+
    let entrada_fichada = await mongo.f_nueva_entrada(
       moment.unix(message.date).toISOString(),
       empleado.id,
