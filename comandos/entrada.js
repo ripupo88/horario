@@ -121,4 +121,4 @@ async function doEntrada(message, empleado, gps, ubica, intentos) {
    }
 }
 
-module.exports = { f_procesa_entrada };
+module.exports = { f_procesa_entrada, doEntrada };

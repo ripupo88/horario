@@ -135,4 +135,4 @@ async function doSalida(message, empleado, res_confirma) {
    );
 }
 
-module.exports = { f_procesa_salida };
+module.exports = { f_procesa_salida, doSalida };
