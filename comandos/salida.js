@@ -41,7 +41,6 @@ let f_procesa_salida = async message => {
          indice2++;
       }
       if (res_confirma) {
-
          let salida_fichada = await mongo.f_nueva_salida(
             moment.unix(message.date).toISOString(),
             empleado.id,
@@ -122,20 +121,37 @@ async function doSalida(message, empleado, res_confirma) {
       empleado.id,
       res_confirma
    );
-   
+
    let admin_empresa = await mongo.f_obten_admin(empleado.id);
-   let mi_text = await notifica_usuario(
-      message.chat.id,
-      salida_fichada,
-      empleado.alias,
-      '\nfuera de ubicación, esto marcará un incidente en su registro'
-   );
-   adm_confirma.f_confirmacion(
-      message,
-      mi_text,
-      admin_empresa.empresa.admin.telegram_id,
-      salida_fichada.res.id
-   );
+
+   if (res_confirma) {
+      await notifica_usuario(
+         admin_empresa.empresa.admin.telegram_id,
+         salida_fichada,
+         empleado.alias,
+         '\nFichado por QR'
+      );
+
+      await notifica_usuario(
+         message.chat.id,
+         salida_fichada,
+         empleado.alias,
+         '\nFichado por QR'
+      );
+   } else {
+      let mi_text = await notifica_usuario(
+         message.chat.id,
+         salida_fichada,
+         empleado.alias,
+         '\nfuera de ubicación, esto marcará un incidente en su registro'
+      );
+      adm_confirma.f_confirmacion(
+         message,
+         mi_text,
+         admin_empresa.empresa.admin.telegram_id,
+         salida_fichada.res.id
+      );
+   }
 }
 
 module.exports = { f_procesa_salida, doSalida };
