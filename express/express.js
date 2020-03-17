@@ -17,9 +17,9 @@ app.post('/fichar', async (req, res) => {
       let telegram_id = req.body.telegram;
       let empleado = await mongo.f_confirma_telegram_id(telegram_id);
       let registro = await mongo.confirma_entrada(empleado);
-      let newTime = new Date();
-      let createTime = newTime.toISOString();
-
+      let newTime = Math.floor(new Date() / 1000);
+      let createTime = newTime;
+      console.log('createTime', createTime);
       let message = {
          date: createTime,
          chat: {
