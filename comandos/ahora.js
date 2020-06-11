@@ -43,7 +43,7 @@ let f_procesa_ahora = async ({ message, web }) => {
                         empresa: empresa.nombre
                     };
                     activosParaWeb.push(webActivo);
-                    turno_activo += dato_empleado.alias + '\n';
+                    turno_activo += dato_empleado.alias + turno[0].entrada + '\n';
                 }
             }
             if (turno_activo == '') turno_activo = 'No hay empleados activos';
