@@ -35,7 +35,7 @@ let f_crea_pdf = async (registro, empleado, destino) => {
   doc.text(
     "Registro realizado en cumplimiento del Art 34.9 del texto refundido de la Ley del Estatuto de los Trabajadores",
     55,
-    20
+    17
   );
 
   let dias = mes.daysInMonth();
