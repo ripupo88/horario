@@ -31,11 +31,11 @@ let f_crea_pdf = async (registro, empleado, destino) => {
 
   //Texto superior con el mes y el año
   doc.text(`${texto_mes.toUpperCase()}`, 15, 14);
-  doc.setFontSize(6);
+  doc.setFontSize(8);
   doc.text(
     "Registro realizado en cumplimiento del Art 34.9 del texto refundido de la Ley del Estatuto de los Trabajadores",
-    35,
-    14
+    55,
+    20
   );
 
   let dias = mes.daysInMonth();
