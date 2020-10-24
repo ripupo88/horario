@@ -20,7 +20,7 @@ app.post("/fichar", async (req, res) => {
         let registro = await mongo.confirma_entrada(empleado);
         let newTime = Math.floor(new Date() / 1000);
         let createTime = newTime;
-        console.log("createTime", createTime);
+
         let message = {
             date: createTime,
             chat: {
@@ -35,7 +35,7 @@ app.post("/fichar", async (req, res) => {
             let ahora = moment();
             let horaEntrada = moment(registro[0].entrada);
             if (ahora.diff(horaEntrada, "minutes") > 10) {
-                salida.doSalida(message, empleado, true);
+                salida.doSalida(message, empleado, true, false);
             }
         } else {
             entrada.doEntrada(message, empleado, true, "fichado por QR", 0);
