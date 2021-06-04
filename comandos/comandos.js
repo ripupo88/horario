@@ -8,7 +8,7 @@ const app = require('./app');
 
 let f_procesa_comando = message => {
    let re = /^\/[a-z]*/gi;
-   let result = re.exec(message.text);
+   let result = re.exec(message.text) | [0];
 
    switch (result[0]) {
       case '/crear':
