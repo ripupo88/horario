@@ -18,7 +18,7 @@ new CronJob(
 );
 
 new CronJob(
-    '0 */1 * * * *',
+    '0 */5 * * * *',
     async () => {
         try {
             // let jornadas_abiertas1 = await mongo.f_fin_jornada(12);
