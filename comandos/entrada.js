@@ -31,6 +31,9 @@ let f_procesa_entrada = async message => {
          throw new Error('Ya tienes un turno abierto.');
       let duplicado = await mongo.f_busca_duplicado(empleado);
       if (duplicado[0] != undefined) throw new Error('Hoy ya has fichado.');
+
+      throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
+
       var res_conf_glo;
       var hola = 'Hola';
       var ubica = 'Ubicación confirmada.';

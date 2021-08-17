@@ -26,6 +26,7 @@ let f_procesa_salida = async (message) => {
         let registro = await mongo.confirma_entrada(empleado);
         if (registro[0] == undefined)
             throw new Error("No tienes fichada una entrada, ficha la entrada.");
+        throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
         let res_confirma = await confirmar.f_confirmacion(
             message,
             `Hola ${
