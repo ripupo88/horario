@@ -6,6 +6,7 @@ const moment = require("moment");
 let mensajes_abiertos = [];
 let f_procesa_salida = async (message) => {
     try {
+        throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
         let indice = 0;
         if (mensajes_abiertos[0] != undefined) {
             for (let cada_id of mensajes_abiertos) {
@@ -26,7 +27,6 @@ let f_procesa_salida = async (message) => {
         let registro = await mongo.confirma_entrada(empleado);
         if (registro[0] == undefined)
             throw new Error("No tienes fichada una entrada, ficha la entrada.");
-        throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
         let res_confirma = await confirmar.f_confirmacion(
             message,
             `Hola ${
@@ -102,7 +102,7 @@ let f_procesa_salida = async (message) => {
         console.log(err);
         console.log(message.chat.id);
         enviar.f_manda_mensaje(message.chat.id, err.toString());
-        resolve();
+        // resolve();
     }
 };
 

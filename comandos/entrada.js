@@ -6,6 +6,7 @@ const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_entrada = async message => {
    try {
+      throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
       let intentos = 0;
       var gps = true;
       let indice = 0;
@@ -32,7 +33,6 @@ let f_procesa_entrada = async message => {
       let duplicado = await mongo.f_busca_duplicado(empleado);
       if (duplicado[0] != undefined) throw new Error('Hoy ya has fichado.');
 
-      throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
 
       var res_conf_glo;
       var hola = 'Hola';
