@@ -1,12 +1,11 @@
-const mongo = require("../mongo/mongodb");
-const enviar = require("../telegram/enviar");
-const confirmar = require("../telegram/confirmacion");
-const adm_confirma = require("../telegram/confirma_entrada");
-const moment = require("moment");
+const mongo = require('../mongo/mongodb');
+const enviar = require('../telegram/enviar');
+const confirmar = require('../telegram/confirmacion');
+const adm_confirma = require('../telegram/confirma_entrada');
+const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_salida = async (message) => {
     try {
-        throw new Error('Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'); // Deshabilita la opcion de fichar por gps
         let indice = 0;
         if (mensajes_abiertos[0] != undefined) {
             for (let cada_id of mensajes_abiertos) {
@@ -20,20 +19,18 @@ let f_procesa_salida = async (message) => {
             mensajes_abiertos.push(message.from.id);
         }
         if (message.from.id != message.chat.id)
-            throw new Error("Solo se puede fichar desde el chat privado");
+            throw new Error('Solo se puede fichar desde el chat privado');
         let empleado = await mongo.f_confirma_telegram_id(message.from.id);
-        if (empleado.role == "ADMIN_ROLE")
-            throw new Error("Los administradores no fichan");
+        if (empleado.role == 'ADMIN_ROLE')
+            throw new Error('Los administradores no fichan');
         let registro = await mongo.confirma_entrada(empleado);
         if (registro[0] == undefined)
-            throw new Error("No tienes fichada una entrada, ficha la entrada.");
+            throw new Error('No tienes fichada una entrada, ficha la entrada.');
         let res_confirma = await confirmar.f_confirmacion(
             message,
-            `Hola ${
-                empleado.alias
-            }, ¿quieres fichar tu salida a las ${moment
+            `Hola ${empleado.alias}, ¿quieres fichar tu salida a las ${moment
                 .unix(message.date)
-                .format("H:mm")}?`
+                .format('H:mm')}?`
         );
         let indice2 = 0;
         for (let cada_id of mensajes_abiertos) {
@@ -62,21 +59,21 @@ let f_procesa_salida = async (message) => {
                     admin_empresa.empresa.admin.telegram_id,
                     salida_fichada,
                     empleado.alias,
-                    "\nubicación confirmada"
+                    '\nubicación confirmada'
                 );
 
                 await notifica_usuario(
                     message.chat.id,
                     salida_fichada,
                     empleado.alias,
-                    "\nubicación confirmada"
+                    '\nubicación confirmada'
                 );
             } else {
                 let mi_text = await notifica_usuario(
                     message.chat.id,
                     salida_fichada,
                     empleado.alias,
-                    "\nsu jornada a durado más de lo normal, requiere validacion del administrador."
+                    '\nsu jornada a durado más de lo normal, requiere validacion del administrador.'
                 );
 
                 adm_confirma.f_confirmacion(
@@ -107,8 +104,8 @@ let f_procesa_salida = async (message) => {
 };
 
 let notifica_usuario = async (chat_id, entrada, empleado, location) => {
-    let fecha = moment(entrada.res.salida).format("DD-MM-YYYY");
-    let hora = moment(entrada.res.salida).format("H:mm");
+    let fecha = moment(entrada.res.salida).format('DD-MM-YYYY');
+    let hora = moment(entrada.res.salida).format('H:mm');
     let duracion = entrada.jornada;
     let horas = Math.floor(
         new moment.duration(entrada.jornada._milliseconds).asHours()
@@ -130,8 +127,8 @@ async function doSalida(message, empleado, res_confirma, system) {
     let admin_empresa = await mongo.f_obten_admin(empleado.id);
 
     if (res_confirma) {
-        let txt_message = "\nFichado por QR";
-        if (system) txt_message = "\nFichado por el SISTEMA";
+        let txt_message = '\nFichado por QR';
+        if (system) txt_message = '\nFichado por el SISTEMA';
 
         await notifica_usuario(
             admin_empresa.empresa.admin.telegram_id,
@@ -151,7 +148,7 @@ async function doSalida(message, empleado, res_confirma, system) {
             message.chat.id,
             salida_fichada,
             empleado.alias,
-            "\nfuera de ubicación, esto marcará un incidente en su registro fffff"
+            '\nfuera de ubicación, esto marcará un incidente en su registro fffff'
         );
         adm_confirma.f_confirmacion(
             message,
