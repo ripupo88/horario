@@ -6,6 +6,9 @@ const moment = require('moment');
 let mensajes_abiertos = [];
 let f_procesa_entrada = async (message) => {
     try {
+        throw new Error(
+            'Temporalmente solo se podrá fichar por QR. Lamentamos las molestias.'
+        ); // Deshabilita la opcion de fichar por gps
         let intentos = 0;
         var gps = true;
         let indice = 0;
